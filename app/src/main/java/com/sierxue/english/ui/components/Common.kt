@@ -46,6 +46,7 @@ import com.sierxue.english.domain.AbilityScores
 import com.sierxue.english.domain.Question
 import com.sierxue.english.domain.QuestionType
 import com.sierxue.english.speech.PlaybackStatus
+import com.sierxue.english.speech.SystemTtsStatus
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -70,9 +71,15 @@ fun SpeakerButton(id: String, text: String, rate: Float? = null, contentDescript
     val container = LocalAppContainer.current
     val state by container.speech.state.collectAsState()
     val settings by container.settings.settings.collectAsState(initial = null)
+    val systemStatus by container.systemTts.status.collectAsState()
     val active = state.id == id && state.status != PlaybackStatus.IDLE
+    val onlineAvailable = settings?.tts?.enabled == true && settings?.tts?.hasKey == true
+    val unavailable = systemStatus == SystemTtsStatus.UNAVAILABLE && !onlineAvailable
     DisposableEffect(id) { onDispose { container.speech.stop(id) } }
-    IconButton(onClick = { container.speech.toggle(id, text, rate ?: settings?.speechRate ?: 1.0f) }) {
+    IconButton(
+        onClick = { container.speech.toggle(id, text, rate ?: settings?.speechRate ?: 1.0f) },
+        enabled = !unavailable,
+    ) {
         if (active && state.status == PlaybackStatus.PREPARING) {
             CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
         } else {
@@ -86,9 +93,17 @@ fun SpeakerButton(id: String, text: String, rate: Float? = null, contentDescript
 
 @Composable
 fun SpeechStatus() {
-    val speech = LocalAppContainer.current.speech
-    val state by speech.state.collectAsState()
-    state.message?.let {
+    val container = LocalAppContainer.current
+    val state by container.speech.state.collectAsState()
+    val settings by container.settings.settings.collectAsState(initial = null)
+    val systemStatus by container.systemTts.status.collectAsState()
+    val onlineAvailable = settings?.tts?.enabled == true && settings?.tts?.hasKey == true
+    val message = if (systemStatus == SystemTtsStatus.UNAVAILABLE && !onlineAvailable) {
+        "系统 TTS 不可用，可在设置中检查"
+    } else {
+        state.message
+    }
+    message?.let {
         Text(it, color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall)
     }
 }

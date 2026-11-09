@@ -29,7 +29,7 @@ class SpeechManager(
     private var currentEngine: SpeechEngine? = null
     private var currentJob: kotlinx.coroutines.Job? = null
 
-    fun toggle(id: String, text: String, rate: Float) {
+    fun toggle(id: String, text: String, rate: Float, forceSystem: Boolean = false) {
         if (text.isBlank()) return
         if (currentId == id && _state.value.status != PlaybackStatus.IDLE) {
             stopAll()
@@ -41,7 +41,7 @@ class SpeechManager(
         currentJob = scope.launch {
             try {
                 val config = settings.settings.first()
-                if (config.tts.enabled && config.tts.hasKey) {
+                if (!forceSystem && config.tts.enabled && config.tts.hasKey) {
                     try {
                         currentEngine = online
                         online.start(SpeechRequest(id, text, rate), callback(id))

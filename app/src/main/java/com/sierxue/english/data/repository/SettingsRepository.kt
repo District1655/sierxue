@@ -38,6 +38,7 @@ class SettingsRepository(private val context: Context) {
             speechRate = (p[SPEECH_RATE] ?: 1.0f).coerceIn(0.7f, 1.3f),
             assistantSpeechRate = (p[ASSISTANT_RATE] ?: 0.9f).coerceIn(0.7f, 1.3f),
             assistantEnabled = p[ASSISTANT_ENABLED] ?: true,
+            preferredTtsEngine = p[TTS_ENGINE_PACKAGE].orEmpty(),
             chat = ChatConfig(
                 enabled = p[CHAT_ENABLED] ?: false,
                 baseUrl = p[CHAT_URL] ?: "https://api.openai.com/v1",
@@ -64,6 +65,7 @@ class SettingsRepository(private val context: Context) {
     suspend fun setSpeechRate(value: Float) = context.settingsStore.edit { it[SPEECH_RATE] = value.coerceIn(0.7f, 1.3f) }
     suspend fun setAssistantRate(value: Float) = context.settingsStore.edit { it[ASSISTANT_RATE] = value.coerceIn(0.7f, 1.3f) }
     suspend fun setAssistantEnabled(value: Boolean) = context.settingsStore.edit { it[ASSISTANT_ENABLED] = value }
+    suspend fun setTtsEnginePackage(value: String) = context.settingsStore.edit { it[TTS_ENGINE_PACKAGE] = value.trim() }
 
     suspend fun saveChat(enabled: Boolean, baseUrl: String, model: String, keyInput: String) {
         validateHttps(baseUrl)
@@ -121,6 +123,7 @@ class SettingsRepository(private val context: Context) {
         val SPEECH_RATE = floatPreferencesKey("speech_rate")
         val ASSISTANT_RATE = floatPreferencesKey("assistant_rate")
         val ASSISTANT_ENABLED = booleanPreferencesKey("assistant_enabled")
+        val TTS_ENGINE_PACKAGE = stringPreferencesKey("tts_engine_package")
         val CHAT_ENABLED = booleanPreferencesKey("chat_enabled")
         val CHAT_URL = stringPreferencesKey("chat_url")
         val CHAT_MODEL = stringPreferencesKey("chat_model")

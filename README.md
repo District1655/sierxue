@@ -27,7 +27,28 @@ $env:ANDROID_HOME = "<Android SDK 目录>"
 
 Debug APK 输出：`app/build/outputs/apk/debug/app-debug.apk`。应用包名为 `com.sierxue.english`，启动图标为自适应图标配合 SX 字母矢量占位方案，无外部图片素材。
 
-本次构建使用 AGP 8.9.2 + Gradle 8.14.3 + Room 2.6.1。APK 大小为 11,232,483 字节（约 10.7 MiB）；`:app:testDebugUnitTest` 的 3 项跟读评分测试全部通过。构建时 adb 无已连接设备，因此尚未执行真机安装和系统 TTS/语音识别实机验收。
+本次构建为 v1.0.1（versionCode 10001），使用 AGP 8.9.2 + Gradle 8.14.3 + Room 2.6.1。APK 大小为 11,327,503 字节（约 10.8 MiB），SHA256 为 `9AA8F3D0A6EB559CC9A34BAB1A5BDC93475894A6EC4FCA9A67CBDDBA8814D380`；`:app:testDebugUnitTest` 的 3 项跟读评分测试全部通过。构建时 adb 无已连接设备，因此尚未执行真机安装、系统 TTS/语音识别和在线更新实机验收。
+
+## 在线更新
+
+应用启动后延迟静默检查一次，也可在设置页手动检查。更新源为 `District1655/sierxue` 的 GitHub Releases。下载显示进度并支持取消；APK 在私有缓存中校验包名和 versionCode 后，通过 FileProvider 打开系统安装页面，不会静默安装。
+
+本工程将通用库源码 vendor 在 `third_party/gh-updater`，来源为 `District1655/gh-updater`。本仓库内的改动包括 10 秒超时、版本化资产选择、私有缓存、进度/取消、APK 安全校验、FileProvider 和未知来源安装引导；`baseUrl` 默认留空，使用官方 API 与系统代理，不内置镜像或 Token。
+
+## 常见问题
+
+### 小米 / 澎湃 OS 提示系统 TTS 不可用
+
+思而学会先读取系统默认引擎，再依次尝试其他已安装引擎；每个引擎初始化超时为 5 秒。英语按 `en-US → en-GB → ROOT` 回落，不会因某一种英语语音数据缺失就直接终止全部发音。
+
+进入「设置 → 发音诊断」可以查看并复制默认引擎、版本、引擎列表、en-US/zh-CN 数据状态、当前语言、最近 onInit 返回码和耗时，也可以重新初始化、测试朗读 Hello、前往系统设置或手动切换引擎。手动选择的引擎会持久化。若系统 TTS 全部不可用，喇叭仅降级为不可用状态，课程不受阻塞；已配置的在线 TTS 会继续独立工作。
+
+## 发布新版本
+
+1. 在 `app/build.gradle.kts` 递增 `versionCode` 并更新 `versionName`。更新库采用 `X*10000 + Y*100 + Z` 的 versionCode 约定。
+2. 执行 `:app:assembleDebug :app:testDebugUnitTest`，确认构建和测试通过。
+3. 将生成的 APK 重命名为 `sierxue-<version>-debug.apk`（发布正式包时可命名为 `sierxue-<version>.apk`），不要提交到源码仓库。
+4. 在 GitHub 创建 Release，tag 使用 `vX.Y.Z`，填写更新说明并上传 APK。应用会在多资产时优先选择与版本号匹配的 APK，否则回退到应用名匹配项或第一个 APK。
 
 ## 内容与隐私
 

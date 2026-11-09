@@ -134,6 +134,15 @@ class SettingsViewModel(
     fun setSpeechRate(value: Float) = viewModelScope.launch { settings.setSpeechRate(value) }
     fun setAssistantRate(value: Float) = viewModelScope.launch { settings.setAssistantRate(value) }
     fun setAssistantEnabled(value: Boolean) = viewModelScope.launch { settings.setAssistantEnabled(value) }
+    fun setTtsEngine(packageName: String) = viewModelScope.launch {
+        settings.setTtsEnginePackage(packageName)
+        speech.system.reinitialize()
+        _message.value = "已选择 TTS 引擎，正在重新初始化"
+    }
+    fun reinitializeTts() {
+        speech.system.reinitialize()
+        _message.value = "正在重新检测系统 TTS"
+    }
 
     fun saveChat(enabled: Boolean, url: String, model: String, key: String) = viewModelScope.launch {
         runCatching { settings.saveChat(enabled, url, model, key) }

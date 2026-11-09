@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +21,8 @@ import androidx.navigation.navArgument
 import com.sierxue.english.di.AppContainer
 import com.sierxue.english.di.Initialization
 import com.sierxue.english.ui.components.AssistantOverlay
+import com.sierxue.english.ui.components.UpdateDialog
+import kotlinx.coroutines.delay
 import com.sierxue.english.ui.screens.CatalogScreen
 import com.sierxue.english.ui.screens.ExamScreen
 import com.sierxue.english.ui.screens.ExamSetupScreen
@@ -50,6 +53,10 @@ fun SiErXueApp(container: AppContainer) {
 private fun ReadyApp(container: AppContainer) {
     val nav = rememberNavController()
     val assistantVm: AssistantViewModel = viewModel(factory = container.viewModelFactory)
+    LaunchedEffect(Unit) {
+        delay(3_000)
+        container.updateController.check(manual = false)
+    }
     val back: () -> Unit = { nav.popBackStack() }
     val home: () -> Unit = {
         nav.navigate("home") { popUpTo("home") { inclusive = true }; launchSingleTop = true }
@@ -88,5 +95,6 @@ private fun ReadyApp(container: AppContainer) {
             composable("settings") { SettingsScreen(back) }
         }
         AssistantOverlay(assistantVm)
+        UpdateDialog(container.updateController)
     }
 }

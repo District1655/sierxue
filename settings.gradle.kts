@@ -23,3 +23,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SiErXue"
 include(":app")
+include(":updater")
+project(":updater").projectDir = file("third_party/gh-updater/updater")

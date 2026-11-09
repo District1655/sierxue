@@ -17,6 +17,7 @@ import com.sierxue.english.data.repository.StudyRepository
 import com.sierxue.english.speech.OnlineTtsEngine
 import com.sierxue.english.speech.SpeechManager
 import com.sierxue.english.speech.SystemTtsEngine
+import com.sierxue.english.update.UpdateController
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,10 +33,11 @@ class AppContainer(context: Context) {
     val study = StudyRepository(database)
     val chatClient = OpenAiChatClient()
     val ttsClient = OpenAiTtsClient()
-    val systemTts = SystemTtsEngine(appContext)
+    val systemTts = SystemTtsEngine(appContext, settings)
     private val onlineTts = OnlineTtsEngine(appContext, settings, ttsClient)
     val speech = SpeechManager(settings, systemTts, onlineTts)
     val assistantContext = AssistantContextHolder()
+    val updateController = UpdateController(appContext)
     val modelAssetStore: ModelAssetStore = LocalModelAssetStore(appContext)
     val ttsCacheDir: File = File(appContext.filesDir, "tts")
 
