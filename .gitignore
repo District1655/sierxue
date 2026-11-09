@@ -9,6 +9,8 @@ local.properties
 # Android 构建产物
 *.apk
 *.aab
+*.gguf
+local-llm-probe/app/native-libs/
 
 # 签名、密钥与敏感配置
 *.keystore

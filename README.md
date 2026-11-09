@@ -54,6 +54,12 @@ Debug APK 输出：`app/build/outputs/apk/debug/app-debug.apk`。应用包名为
 
 默认 20 次/分钟是否偏保守需真 Key 实测后调整。非实时批量任务使用 WorkManager 在网络恢复后串行重试，实时对话不后台补发。全部端点失败时显示「离线回答」并使用本地课程内容，不打断学习。
 
+## 本地模型可行性验证（独立工程）
+
+`local-llm-probe` 是独立于主 App 的 llama.cpp 验证工程，不进入主 App 依赖。它分别构建 CPU 与 Vulkan 后端，支持选择 GGUF、输入 prompt、输出回复，并采集首 token 延迟、token/s、Native Heap 峰值、CPU 和电池温度。
+
+模型选用 Qwen3-0.6B 官方 GGUF。由于官方仓库当前只提供 Q8_0 而没有官方 Q4_K_M，验证使用 `Qwen3-0.6B-Q8_0.gguf`，大小 639,446,688 字节，SHA256 为 `9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031`。模型来自 `Qwen/Qwen3-0.6B-GGUF`，不使用第三方转存，GGUF 不进入 Git 仓库。构建与实测步骤见 [验证工程说明](local-llm-probe/README.md)。
+
 ## 常见问题
 
 ### 小米 / 澎湃 OS 提示系统 TTS 不可用
