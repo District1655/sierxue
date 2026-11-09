@@ -17,6 +17,7 @@ class AssistantRepository(
     private val router: ChatProviderRouter,
 ) {
     private val dao = db.studyDao()
+    val channelMonitor = router.monitor
 
     fun observeConversations(): Flow<List<AssistantConversationEntity>> = dao.observeConversations()
     fun observeMessages(id: String) = dao.observeMessages(id)
@@ -38,7 +39,7 @@ class AssistantRepository(
         dao.clearConversations()
     }
 
-    suspend fun send(conversationId: String, context: AssistantContext, text: String): ProviderReply {
+    suspend fun send(conversationId: String, context: AssistantContext, text: String, onDelta: suspend (String) -> Unit = {}): ProviderReply {
         val previous = dao.messages(conversationId).map { ChatMessage(it.role, it.content) }
         val now = System.currentTimeMillis()
         dao.insertMessage(AssistantMessageEntity(conversationId = conversationId, role = "user", content = text, contextJson = context.toJson(), createdAt = now, isError = false))
@@ -49,7 +50,7 @@ class AssistantRepository(
             userMessage = text,
             fallbackText = localFallback(context, text),
         )
-        val reply = router.respond(request)
+        val reply = router.respond(request, onDelta, userInitiated = true)
         dao.insertMessage(
             AssistantMessageEntity(
                 conversationId = conversationId, role = "assistant", content = reply.text,

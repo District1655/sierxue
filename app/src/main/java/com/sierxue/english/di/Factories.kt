@@ -23,7 +23,7 @@ class AppViewModelFactory(private val container: AppContainer) : ViewModelProvid
             StatsViewModel::class.java -> StatsViewModel(container.study)
             SettingsViewModel::class.java -> SettingsViewModel(
                 container.settings, container.study, container.assistant,
-                container.chatClient, container.ttsClient, container.ttsCacheDir, container.speech,
+                container.chatClient, container.ttsClient, container.ttsCacheDir, container.speech, container.healthStore,
             )
             AssistantViewModel::class.java -> AssistantViewModel(
                 container.assistant, container.assistantContext, container.settings, container.speech,

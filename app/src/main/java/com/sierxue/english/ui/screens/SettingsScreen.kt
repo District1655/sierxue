@@ -63,27 +63,6 @@ fun SettingsScreen(onBack: () -> Unit) {
     var engineMenu by remember { mutableStateOf(false) }
     var diagnosticActionMessage by remember { mutableStateOf<String?>(null) }
     var clearData by remember { mutableStateOf(false) }
-    var initialized by remember { mutableStateOf(false) }
-
-    var chatEnabled by remember { mutableStateOf(false) }
-    var chatUrl by remember { mutableStateOf("") }
-    var chatModel by remember { mutableStateOf("") }
-    var chatKey by remember { mutableStateOf("") }
-    var ttsEnabled by remember { mutableStateOf(false) }
-    var ttsUrl by remember { mutableStateOf("") }
-    var ttsModel by remember { mutableStateOf("") }
-    var ttsVoice by remember { mutableStateOf("") }
-    var ttsFormat by remember { mutableStateOf("mp3") }
-    var ttsKey by remember { mutableStateOf("") }
-
-    LaunchedEffect(values) {
-        if (!initialized) {
-            chatEnabled = values.chat.enabled; chatUrl = values.chat.baseUrl; chatModel = values.chat.model
-            ttsEnabled = values.tts.enabled; ttsUrl = values.tts.baseUrl; ttsModel = values.tts.model
-            ttsVoice = values.tts.voice; ttsFormat = values.tts.format
-            initialized = true
-        }
-    }
 
     if (clearData) {
         AlertDialog(
@@ -158,44 +137,9 @@ fun SettingsScreen(onBack: () -> Unit) {
                 OutlinedButton(onClick = { vm.clearConversations() }) { Text("清除对话记录") }
             }
 
-            SettingsGroup("对话出题接口") {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("启用对话 AI", modifier = Modifier.weight(1f)); Switch(checked = chatEnabled, onCheckedChange = { chatEnabled = it })
-                }
-                SecretField(chatKey, { chatKey = it }, if (values.chat.hasKey) "已保存，输入以替换" else "API Key（仅本机加密保存）")
-                ConfigField(chatUrl, { chatUrl = it }, "BaseURL")
-                ConfigField(chatModel, { chatModel = it }, "模型名")
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { vm.saveChat(chatEnabled, chatUrl, chatModel, chatKey) }) { Text("保存") }
-                    OutlinedButton(onClick = { vm.testChat(chatEnabled, chatUrl, chatModel, chatKey) }) { Text("测试连接") }
-                    TextButton(onClick = { vm.clearChatKey(); chatKey = "" }) { Text("清除 Key") }
-                }
-            }
-
-            SettingsGroup("在线 TTS 接口") {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("优先使用在线 TTS", modifier = Modifier.weight(1f)); Switch(checked = ttsEnabled, onCheckedChange = { ttsEnabled = it })
-                }
-                SecretField(ttsKey, { ttsKey = it }, if (values.tts.hasKey) "已保存，输入以替换" else "独立 TTS API Key")
-                ConfigField(ttsUrl, { ttsUrl = it }, "BaseURL")
-                ConfigField(ttsModel, { ttsModel = it }, "TTS 模型名")
-                Text("音色")
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    items(listOf("alloy", "echo", "nova", "onyx")) { voice ->
-                        FilterChip(selected = ttsVoice == voice, onClick = { ttsVoice = voice }, label = { Text(voice) })
-                    }
-                }
-                Text("返回格式")
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("mp3", "wav").forEach { format -> FilterChip(selected = ttsFormat == format, onClick = { ttsFormat = format }, label = { Text(format) }) }
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { vm.saveTts(ttsEnabled, ttsUrl, ttsModel, ttsVoice, ttsFormat, ttsKey) }) { Text("保存") }
-                    OutlinedButton(onClick = { vm.testTts(ttsEnabled, ttsUrl, ttsModel, ttsVoice, ttsFormat, ttsKey) }) { Text("测试连接") }
-                    TextButton(onClick = { vm.clearTtsKey(); ttsKey = "" }) { Text("清除 Key") }
-                }
-                Text("在线失败自动回落系统 TTS；相同文本和参数使用本地缓存。", style = MaterialTheme.typography.bodySmall)
-            }
+            ChatEndpointSettings(values, vm)
+            TtsEndpointSettings(values, vm)
+            ChannelHealthSettings(values, vm)
 
             SettingsGroup("应用更新") {
                 Text("当前版本：v${BuildConfig.VERSION_NAME}（${BuildConfig.VERSION_CODE}）")

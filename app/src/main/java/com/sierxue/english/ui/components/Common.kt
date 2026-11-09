@@ -73,7 +73,7 @@ fun SpeakerButton(id: String, text: String, rate: Float? = null, contentDescript
     val settings by container.settings.settings.collectAsState(initial = null)
     val systemStatus by container.systemTts.status.collectAsState()
     val active = state.id == id && state.status != PlaybackStatus.IDLE
-    val onlineAvailable = settings?.tts?.enabled == true && settings?.tts?.hasKey == true
+    val onlineAvailable = settings?.ttsEndpoints?.any { it.enabled && it.hasKey } == true
     val unavailable = systemStatus == SystemTtsStatus.UNAVAILABLE && !onlineAvailable
     DisposableEffect(id) { onDispose { container.speech.stop(id) } }
     IconButton(
@@ -97,7 +97,7 @@ fun SpeechStatus() {
     val state by container.speech.state.collectAsState()
     val settings by container.settings.settings.collectAsState(initial = null)
     val systemStatus by container.systemTts.status.collectAsState()
-    val onlineAvailable = settings?.tts?.enabled == true && settings?.tts?.hasKey == true
+    val onlineAvailable = settings?.ttsEndpoints?.any { it.enabled && it.hasKey } == true
     val message = if (systemStatus == SystemTtsStatus.UNAVAILABLE && !onlineAvailable) {
         "系统 TTS 不可用，可在设置中检查"
     } else {

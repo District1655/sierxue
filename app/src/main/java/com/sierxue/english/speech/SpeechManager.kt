@@ -41,7 +41,7 @@ class SpeechManager(
         currentJob = scope.launch {
             try {
                 val config = settings.settings.first()
-                if (!forceSystem && config.tts.enabled && config.tts.hasKey) {
+                if (!forceSystem && config.ttsEndpoints.any { it.enabled && it.hasKey }) {
                     try {
                         currentEngine = online
                         online.start(SpeechRequest(id, text, rate), callback(id))

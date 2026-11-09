@@ -50,6 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sierxue.english.data.remote.AssistantChannelPhase
 import com.sierxue.english.ui.viewmodel.AssistantViewModel
 import kotlin.math.roundToInt
 
@@ -116,6 +117,7 @@ fun AssistantOverlay(vm: AssistantViewModel) {
 @Composable
 private fun AssistantPanel(vm: AssistantViewModel, contextLabel: String, speechRate: Float) {
     val state by vm.state.collectAsStateWithLifecycle()
+    val monitor by vm.channelMonitor.collectAsStateWithLifecycle()
     var input by remember { mutableStateOf("") }
     var voiceError by remember { mutableStateOf<String?>(null) }
     val androidContext = LocalContext.current
@@ -126,6 +128,12 @@ private fun AssistantPanel(vm: AssistantViewModel, contextLabel: String, speechR
 
     Column(Modifier.fillMaxWidth().fillMaxHeight(0.94f).padding(horizontal = 16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            val phaseColor = when (monitor.phase) {
+                AssistantChannelPhase.MAIN_HEALTHY -> Color(0xFF2E9E5B)
+                AssistantChannelPhase.RETRYING, AssistantChannelPhase.FALLBACK_ACTIVE -> Color(0xFFE0A100)
+                AssistantChannelPhase.OFFLINE -> Color.Red
+            }
+            Box(Modifier.padding(end = 8.dp).size(10.dp).background(phaseColor, CircleShape))
             Column(Modifier.weight(1f)) {
                 Text("学习助手 · 小思", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Text(contextLabel, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
@@ -134,6 +142,7 @@ private fun AssistantPanel(vm: AssistantViewModel, contextLabel: String, speechR
             TextButton(onClick = { vm.newConversation() }) { Text("新对话") }
             TextButton(onClick = { vm.hide() }) { Text("隐藏") }
         }
+        monitor.message?.let { Text(it, color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall) }
         Row {
             TextButton(onClick = { vm.send("解释当前知识点") }) { Text("解释本段") }
             TextButton(onClick = { vm.send("出 3 道同类题") }) { Text("出 3 道同类题") }
@@ -165,12 +174,16 @@ private fun AssistantPanel(vm: AssistantViewModel, contextLabel: String, speechR
                     }
                 }
             }
+            state.streamingText?.let { partial ->
+                item { Card(Modifier.fillMaxWidth()) { Text(partial, modifier = Modifier.padding(12.dp)) } }
+            }
             if (state.loading) item { Row { CircularProgressIndicator(Modifier.size(20.dp)); Text("  小思正在思考…") } }
         }
         state.status?.let {
             Text(it, color = if (state.canRetry) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall)
             if (state.canRetry) TextButton(onClick = { vm.retry() }) { Text("重试") }
         }
+        if (state.canContinue) TextButton(onClick = { vm.continueAnswer() }) { Text("继续") }
         voiceError?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
             OutlinedTextField(value = input, onValueChange = { input = it }, modifier = Modifier.weight(1f), label = { Text("问小思") }, maxLines = 3)

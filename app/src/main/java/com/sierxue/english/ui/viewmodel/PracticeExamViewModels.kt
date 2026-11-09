@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sierxue.english.data.local.ExamEntity
 import com.sierxue.english.data.local.ReviewItemEntity
+import com.sierxue.english.data.remote.ErrorClassifier
 import com.sierxue.english.data.remote.OpenAiChatClient
+import com.sierxue.english.data.remote.StableRequestRunner
 import com.sierxue.english.data.repository.ExamReport
 import com.sierxue.english.data.repository.SettingsRepository
 import com.sierxue.english.data.repository.StudyRepository
@@ -24,6 +26,7 @@ class PracticeViewModel(
     private val study: StudyRepository,
     private val settings: SettingsRepository,
     private val chatClient: OpenAiChatClient,
+    private val runner: StableRequestRunner,
     private val unitId: String?,
     private val sectionId: String?,
     private val wrongQuestionId: String?,
@@ -74,17 +77,22 @@ class PracticeViewModel(
 
     fun explainWithAi() = viewModelScope.launch {
         val question = currentQuestion() ?: return@launch
-        val config = settings.settings.first().chat
-        if (!config.enabled || !config.hasKey) {
-            _state.value = _state.value.copy(error = "请先在设置中开启并配置对话接口")
+        val endpoints = settings.settings.first().chatEndpoints.filter { it.enabled && it.hasKey }.sortedByDescending { it.primary }
+        if (endpoints.isEmpty()) {
+            _state.value = _state.value.copy(error = "请先在设置中开启并配置对话端点")
             return@launch
         }
         _state.value = _state.value.copy(aiLoading = true, error = null)
         try {
-            val text = chatClient.explain(config, settings.chatKey(), question, _state.value.answers[question.id].orEmpty())
+            val text = runner.execute(
+                endpoints = endpoints,
+                idOf = { it.id }, enabledOf = { it.enabled && it.hasKey }, rpmOf = { it.requestsPerMinute },
+                userInitiated = true,
+                block = { endpoint -> chatClient.explain(endpoint, settings.chatKey(endpoint.id), question, _state.value.answers[question.id].orEmpty()) },
+            )
             _state.value = _state.value.copy(aiLoading = false, aiText = text)
         } catch (error: Exception) {
-            _state.value = _state.value.copy(aiLoading = false, error = "AI 不可用，已保留本地解析：${error.message ?: "请求失败"}")
+            _state.value = _state.value.copy(aiLoading = false, error = "AI 不可用，已保留本地解析：${ErrorClassifier.userMessage(error)}")
         }
     }
 

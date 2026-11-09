@@ -8,10 +8,13 @@ import com.sierxue.english.data.local.LocalModelAssetStore
 import com.sierxue.english.data.local.ModelAssetStore
 import com.sierxue.english.data.local.SeedImporter
 import com.sierxue.english.data.remote.ChatProviderRouter
+import com.sierxue.english.data.remote.EndpointHealthStore
 import com.sierxue.english.data.remote.OfflineFallbackProvider
 import com.sierxue.english.data.remote.OpenAiChatClient
 import com.sierxue.english.data.remote.OpenAiTtsClient
 import com.sierxue.english.data.remote.RemoteChatProvider
+import com.sierxue.english.data.remote.StableRequestRunner
+import com.sierxue.english.data.remote.TokenBucketRegistry
 import com.sierxue.english.data.repository.SettingsRepository
 import com.sierxue.english.data.repository.StudyRepository
 import com.sierxue.english.speech.OnlineTtsEngine
@@ -33,18 +36,22 @@ class AppContainer(context: Context) {
     val study = StudyRepository(database)
     val chatClient = OpenAiChatClient()
     val ttsClient = OpenAiTtsClient()
+    val healthStore = EndpointHealthStore(appContext)
+    val tokenBuckets = TokenBucketRegistry()
+    val requestRunner = StableRequestRunner(healthStore, tokenBuckets)
     val systemTts = SystemTtsEngine(appContext, settings)
-    private val onlineTts = OnlineTtsEngine(appContext, settings, ttsClient)
+    private val onlineTts = OnlineTtsEngine(appContext, settings, ttsClient, requestRunner)
     val speech = SpeechManager(settings, systemTts, onlineTts)
     val assistantContext = AssistantContextHolder()
     val updateController = UpdateController(appContext)
     val modelAssetStore: ModelAssetStore = LocalModelAssetStore(appContext)
     val ttsCacheDir: File = File(appContext.filesDir, "tts")
 
-    private val chatRouter = ChatProviderRouter(
+    val chatRouter = ChatProviderRouter(
         settings,
         RemoteChatProvider(settings, chatClient),
         OfflineFallbackProvider(),
+        requestRunner,
     )
     val assistant = AssistantRepository(database, study, chatRouter)
     val viewModelFactory = AppViewModelFactory(this)

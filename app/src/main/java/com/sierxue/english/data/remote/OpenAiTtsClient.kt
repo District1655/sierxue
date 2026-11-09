@@ -13,11 +13,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
 class OpenAiTtsClient(
-    private val client: OkHttpClient = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(45, TimeUnit.SECONDS)
-        .writeTimeout(20, TimeUnit.SECONDS)
-        .build(),
+    private val client: OkHttpClient = OpenAiChatClient.sharedClient(),
 ) {
     suspend fun synthesize(
         config: TtsConfig,
@@ -52,7 +48,10 @@ class OpenAiTtsClient(
         val temporary = File(cacheDir, "$name.tmp")
         try {
             client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) throw IOException("TTS 请求失败（HTTP ${response.code}）")
+                if (!response.isSuccessful) {
+                    val errorBody = response.body?.string().orEmpty()
+                    throw OpenAiChatClient.responseException(response, errorBody)
+                }
                 val source = response.body?.byteStream() ?: throw IOException("TTS 返回了空音频")
                 source.use { input ->
                     temporary.outputStream().buffered().use { output ->

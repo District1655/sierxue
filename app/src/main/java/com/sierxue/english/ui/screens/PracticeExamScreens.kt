@@ -62,7 +62,7 @@ fun PracticeScreen(
 ) {
     val container = LocalAppContainer.current
     val vm: PracticeViewModel = viewModel(factory = viewModelFactoryOf {
-        PracticeViewModel(container.study, container.settings, container.chatClient, unitId, sectionId, wrongQuestionId)
+        PracticeViewModel(container.study, container.settings, container.chatClient, container.requestRunner, unitId, sectionId, wrongQuestionId)
     })
     val state by vm.state.collectAsStateWithLifecycle()
     val question = state.questions.getOrNull(state.index)

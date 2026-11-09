@@ -66,19 +66,27 @@ data class AbilityScores(
 )
 
 data class ChatConfig(
+    val id: String = "chat_default",
+    val name: String = "主力模型",
     val enabled: Boolean = false,
+    val primary: Boolean = true,
     val baseUrl: String = "https://api.openai.com/v1",
     val model: String = "gpt-4o-mini",
     val hasKey: Boolean = false,
+    val requestsPerMinute: Int = 20,
 )
 
 data class TtsConfig(
+    val id: String = "tts_default",
+    val name: String = "主力语音",
     val enabled: Boolean = false,
+    val primary: Boolean = true,
     val baseUrl: String = "https://api.openai.com/v1",
     val model: String = "tts-1",
     val voice: String = "alloy",
     val format: String = "mp3",
     val hasKey: Boolean = false,
+    val requestsPerMinute: Int = 20,
 )
 
 data class AppSettings(
@@ -91,6 +99,8 @@ data class AppSettings(
     val ttsServiceQueryCount: Int = -1,
     val chat: ChatConfig = ChatConfig(),
     val tts: TtsConfig = TtsConfig(),
+    val chatEndpoints: List<ChatConfig> = listOf(ChatConfig()),
+    val ttsEndpoints: List<TtsConfig> = listOf(TtsConfig()),
 )
 
 data class ChatMessage(val role: String, val content: String)

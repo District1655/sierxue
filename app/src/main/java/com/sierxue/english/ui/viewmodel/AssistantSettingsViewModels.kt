@@ -7,6 +7,8 @@ import com.sierxue.english.assistant.AssistantRepository
 import com.sierxue.english.data.local.AssistantConversationEntity
 import com.sierxue.english.data.local.AssistantMessageEntity
 import com.sierxue.english.data.remote.ChatSource
+import com.sierxue.english.data.remote.EndpointHealthStore
+import com.sierxue.english.data.remote.ErrorClassifier
 import com.sierxue.english.data.remote.OpenAiChatClient
 import com.sierxue.english.data.remote.OpenAiTtsClient
 import com.sierxue.english.data.repository.SettingsRepository
@@ -33,6 +35,7 @@ class AssistantViewModel(
     private val _state = MutableStateFlow(AssistantUiState())
     val state: StateFlow<AssistantUiState> = _state
     val context = contextHolder.context
+    val channelMonitor = repository.channelMonitor
     val preferences = settings.settings.map { it.assistantEnabled to it.assistantSpeechRate }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true to 0.9f)
     private var messagesJob: Job? = null
@@ -66,14 +69,18 @@ class AssistantViewModel(
         if (text.isBlank() || _state.value.loading) return@launch
         lastText = text
         val id = _state.value.activeConversationId ?: repository.ensureConversation().also { activate(it) }
-        _state.value = _state.value.copy(loading = true, status = null)
+        _state.value = _state.value.copy(loading = true, status = null, streamingText = "", canContinue = false, canRetry = false)
         try {
-            val reply = repository.send(id, contextHolder.context.value, text)
+            val reply = repository.send(id, contextHolder.context.value, text) { delta ->
+                _state.value = _state.value.copy(streamingText = (_state.value.streamingText ?: "") + delta)
+            }
             _state.value = _state.value.copy(
                 loading = false,
                 unread = !_state.value.panelOpen,
                 status = reply.errorMessage ?: if (reply.source == ChatSource.OFFLINE) "当前为本地讲解；配置 AI 后可深度回答" else null,
-                canRetry = reply.errorMessage != null,
+                canRetry = reply.errorMessage != null && !reply.interrupted,
+                canContinue = reply.interrupted,
+                streamingText = null,
             )
             if (autoSpeak) speech.toggle("assistant_${System.currentTimeMillis()}", reply.text, preferences.value.second)
         } catch (error: Exception) {
@@ -82,6 +89,7 @@ class AssistantViewModel(
     }
 
     fun retry() { if (lastText.isNotBlank()) send(lastText) }
+    fun continueAnswer() { send("请从上次中断处继续，不要重复已输出内容。") }
 
     fun clear() = viewModelScope.launch {
         repository.clear()
@@ -112,6 +120,8 @@ data class AssistantUiState(
     val unread: Boolean = false,
     val status: String? = null,
     val canRetry: Boolean = false,
+    val canContinue: Boolean = false,
+    val streamingText: String? = null,
 )
 
 class SettingsViewModel(
@@ -122,6 +132,7 @@ class SettingsViewModel(
     private val ttsClient: OpenAiTtsClient,
     private val ttsCacheDir: File,
     private val speech: SpeechManager,
+    val healthStore: EndpointHealthStore,
 ) : ViewModel() {
     val values: StateFlow<AppSettings> = settings.settings.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppSettings())
     private val _message = MutableStateFlow<String?>(null)
@@ -144,41 +155,50 @@ class SettingsViewModel(
         _message.value = "正在重新检测系统 TTS"
     }
 
-    fun saveChat(enabled: Boolean, url: String, model: String, key: String) = viewModelScope.launch {
-        runCatching { settings.saveChat(enabled, url, model, key) }
-            .onSuccess { _message.value = "对话接口配置已保存" }
+    fun saveChatEndpoints(endpoints: List<ChatConfig>, keys: Map<String, String>) = viewModelScope.launch {
+        runCatching { settings.saveChatEndpoints(endpoints, keys) }
+            .onSuccess { _message.value = "对话端点已保存" }
             .onFailure { _message.value = it.message }
     }
 
-    fun testChat(enabled: Boolean, url: String, model: String, key: String) = viewModelScope.launch {
-        _message.value = "正在测试对话接口…"
-        runCatching {
-            settings.saveChat(enabled, url, model, key)
-            val config = ChatConfig(enabled = true, baseUrl = url.trim().trimEnd('/'), model = model.trim())
-            chatClient.test(config, key.ifBlank { settings.chatKey() })
-        }.onSuccess { _message.value = "对话接口连接成功" }
-            .onFailure { _message.value = "对话测试失败：${it.message}" }
-    }
-
-    fun clearChatKey() { settings.clearChatKey(); _message.value = "对话 Key 已清除" }
-
-    fun saveTts(enabled: Boolean, url: String, model: String, voice: String, format: String, key: String) = viewModelScope.launch {
-        runCatching { settings.saveTts(enabled, url, model, voice, format, key) }
-            .onSuccess { _message.value = "TTS 接口配置已保存" }
+    fun saveTtsEndpoints(endpoints: List<TtsConfig>, keys: Map<String, String>) = viewModelScope.launch {
+        runCatching { settings.saveTtsEndpoints(endpoints, keys) }
+            .onSuccess { _message.value = "TTS 端点已保存" }
             .onFailure { _message.value = it.message }
     }
 
-    fun testTts(enabled: Boolean, url: String, model: String, voice: String, format: String, key: String) = viewModelScope.launch {
-        _message.value = "正在测试 TTS 接口…"
-        runCatching {
-            settings.saveTts(enabled, url, model, voice, format, key)
-            val config = TtsConfig(enabled = true, baseUrl = url.trim().trimEnd('/'), model = model.trim(), voice = voice.trim(), format = format)
-            ttsClient.synthesize(config, key.ifBlank { settings.ttsKey() }, "Hello from SiErXue.", 1.0f, ttsCacheDir)
-        }.onSuccess { _message.value = "TTS 接口连接成功，测试音频已缓存" }
-            .onFailure { _message.value = "TTS 测试失败：${it.message}" }
+    fun testChatEndpoint(config: ChatConfig, keyInput: String) = viewModelScope.launch {
+        _message.value = "正在测试 ${config.name.ifBlank { config.id }}…"
+        runCatching { chatClient.test(config.copy(enabled = true), keyInput.ifBlank { settings.chatKey(config.id) }) }
+            .onSuccess {
+                healthStore.onSuccess(config.id)
+                _message.value = "对话端点连接成功"
+            }.onFailure {
+                healthStore.onFailure(config.id, it)
+                _message.value = "对话测试失败：${ErrorClassifier.userMessage(it)}"
+            }
     }
 
-    fun clearTtsKey() { settings.clearTtsKey(); _message.value = "TTS Key 已清除" }
+    fun testTtsEndpoint(config: TtsConfig, keyInput: String) = viewModelScope.launch {
+        _message.value = "正在测试 ${config.name.ifBlank { config.id }}…"
+        runCatching {
+            ttsClient.synthesize(config.copy(enabled = true), keyInput.ifBlank { settings.ttsKey(config.id) }, "Hello from SiErXue.", 1.0f, ttsCacheDir)
+        }.onSuccess {
+            healthStore.onSuccess(config.id)
+            _message.value = "TTS 端点连接成功，测试音频已缓存"
+        }.onFailure {
+            healthStore.onFailure(config.id, it)
+            _message.value = "TTS 测试失败：${ErrorClassifier.userMessage(it)}"
+        }
+    }
+
+    fun resetEndpoint(id: String) {
+        healthStore.reset(id)
+        _message.value = "端点已恢复并重置健康状态"
+    }
+
+    fun clearChatKey(id: String) { settings.clearChatKey(id); _message.value = "对话 Key 已清除" }
+    fun clearTtsKey(id: String) { settings.clearTtsKey(id); _message.value = "TTS Key 已清除" }
 
     fun clearConversations() = viewModelScope.launch { assistant.clear(); _message.value = "小思对话已清除" }
     fun clearData() = viewModelScope.launch {
