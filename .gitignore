@@ -1,0 +1,31 @@
+.gradle/
+.idea/
+local.properties
+/build/
+**/build/
+*.iml
+.DS_Store
+
+# Android 构建产物
+*.apk
+*.aab
+
+# 签名、密钥与敏感配置
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pk8
+*.pem
+*.key
+*.b64
+*.token
+.env
+.env.*
+secrets.*
+credentials.*
+secure_api_keys*
+
+# 日志
+*.log
+logs/

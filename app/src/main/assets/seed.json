@@ -1,0 +1,337 @@
+{
+  "version": 2,
+  "books": [
+    {
+      "id": "BOOK1",
+      "code": "A1",
+      "title": "入门 A1",
+      "description": "从发音、句型和日常场景起步，完成八课连贯的基础英语训练。",
+      "outlineOnly": false,
+      "lessons": [
+        {
+          "id": "B1L01",
+          "number": 1,
+          "title": "问候与自我介绍",
+          "description": "用自然语音打招呼，并用 I am 与 My name is 介绍自己。",
+          "durationMinutes": 20,
+          "sections": [
+            {
+              "type": "PRONUNCIATION",
+              "title": "发音：/ɪ/ 与 /iː/，友好语调",
+              "content": {
+                "phoneme": "/ɪ/ 短促放松，如 ship；/iː/ 更长、嘴角向两侧，如 sheep。问候句末尾用平缓语调显得友好。",
+                "minimalPairs": [{"left":"ship","right":"sheep"},{"left":"sit","right":"seat"},{"left":"live","right":"leave"}],
+                "rhythm": "重读 NAME 和名字：My NAME is AMY。问候语 Nice to MEET you 中 meet 重读。",
+                "shadowSentences": ["Nice to meet you.", "My name is Amy."]
+              }
+            },
+            {
+              "type": "PATTERN",
+              "title": "句型：I am 与 My name is",
+              "content": {
+                "pattern": "I am + 姓名/身份。My name is + 姓名。",
+                "variations": ["I am a student.", "My name is Ben.", "I am new here."],
+                "substitutions": [{"prompt":"用 Lily 替换：My name is ___.","answer":"Lily"},{"prompt":"用 a new student 替换：I am ___.","answer":"a new student"}]
+              }
+            },
+            {
+              "type": "EXPRESSIONS",
+              "title": "常用语：初次见面",
+              "content": {
+                "scenario": "在学校或办公室第一次见到别人。",
+                "items": [{"phrase":"Hello, I am Amy.","meaning":"你好，我是埃米。"},{"phrase":"Nice to meet you.","meaning":"很高兴认识你。"},{"phrase":"Nice to meet you too.","meaning":"我也很高兴认识你。"}]
+              }
+            },
+            {"type":"VOCABULARY","title":"词汇：身份与问候","content":{"note":"先听单词，再朗读搭配和例句。"}},
+            {
+              "type": "READING",
+              "title": "读写：A new classmate",
+              "content": {"speakingTask":"用三句话介绍自己：姓名、身份和今天的心情。","sampleAnswer":"My name is Sam. I am a new student. I am happy today.","sentenceBreakdown":["My name is Ben：用 My name is 介绍姓名。","I am a new student：a 表示一名，new 修饰 student。","We are happy today：we 与 are 搭配。"]}
+            }
+          ],
+          "vocabulary": [
+            {"word":"hello","phonetic":"/həˈləʊ/","meaning":"你好","collocation":"say hello to someone","rootTip":"感叹词，可直接单独使用","example":"Say hello to our new classmate."},
+            {"word":"meet","phonetic":"/miːt/","meaning":"遇见；相识","collocation":"nice to meet you","rootTip":"过去式为 met","example":"Nice to meet you."},
+            {"word":"name","phonetic":"/neɪm/","meaning":"名字","collocation":"my name","rootTip":"与 same 中的元音相同","example":"My name is Ben."},
+            {"word":"student","phonetic":"/ˈstjuːdənt/","meaning":"学生","collocation":"a new student","rootTip":"study 是动词，student 指学习者","example":"I am a new student."},
+            {"word":"new","phonetic":"/njuː/","meaning":"新的","collocation":"a new friend","rootTip":"反义词是 old","example":"She is my new friend."},
+            {"word":"friend","phonetic":"/frend/","meaning":"朋友","collocation":"make a friend","rootTip":"friendly 表示友好的","example":"Ben is my friend."},
+            {"word":"happy","phonetic":"/ˈhæpi/","meaning":"高兴的","collocation":"be happy","rootTip":"名词形式为 happiness","example":"We are happy today."},
+            {"word":"today","phonetic":"/təˈdeɪ/","meaning":"今天","collocation":"today is Monday","rootTip":"to + day 构成时间副词","example":"I am busy today."}
+          ],
+          "passage": {"title":"A new classmate","content":"Hello! My name is Ben. I am a new student at Sun School. I am nine years old. My friend Lily is in my class too. She is happy to see me. We say hello to our teacher. We are happy today.","mainIdea":"Ben 介绍自己和新同学 Lily，并表达开学时的愉快心情。"},
+          "questions": [
+            {"section":2,"type":"SINGLE","prompt":"I ___ a new student.","options":[{"id":"A","text":"am"},{"id":"B","text":"is"},{"id":"C","text":"are"},{"id":"D","text":"be"}],"answer":["A"],"explanation":"主语 I 在一般现在时中与 am 搭配。"},
+            {"section":4,"type":"ORDER","prompt":"排列成一句自我介绍。","options":[{"id":"A","text":"is"},{"id":"B","text":"My"},{"id":"C","text":"Lily"},{"id":"D","text":"name"}],"answer":["B","D","A","C"],"explanation":"正确语序是 My name is Lily。"},
+            {"section":5,"type":"SINGLE","prompt":"What is the passage mainly about?","options":[{"id":"A","text":"A new student and his friend"},{"id":"B","text":"A school trip"},{"id":"C","text":"A teacher's family"},{"id":"D","text":"A sports lesson"}],"answer":["A"],"explanation":"全文围绕新学生 Ben 和他的朋友 Lily 展开。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"Ben and Lily are in the same class.","answer":["TRUE"],"explanation":"Lily is in my class too 表示两人同班。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"What can we infer about Lily?","options":[{"id":"A","text":"She is unhappy to see Ben"},{"id":"B","text":"She already knows Ben"},{"id":"C","text":"She is a teacher"},{"id":"D","text":"She is nine years old"}],"answer":["B"],"explanation":"My friend Lily 与 happy to see me 表明她之前已经认识 Ben。"}
+          ]
+        },
+        {
+          "id": "B1L02",
+          "number": 2,
+          "title": "家庭与日常生活",
+          "description": "描述家庭成员和每日习惯，掌握一般现在时第三人称变化。",
+          "durationMinutes": 22,
+          "sections": [
+            {"type":"PRONUNCIATION","title":"发音：/æ/ 与 /e/，句尾弱读","content":{"phoneme":"/æ/ 口型较大，如 family；/e/ 较短，如 breakfast。注意第三人称动词词尾 -s 的轻读。","minimalPairs":[{"left":"bad","right":"bed"},{"left":"man","right":"men"},{"left":"bag","right":"beg"}],"rhythm":"重读实义词：I GET up at SEVEN。冠词 a、the 通常弱读。","shadowSentences":["I get up at seven.","She likes milk."]}},
+            {"type":"PATTERN","title":"句型：主语 + 日常动词","content":{"pattern":"I/You/We/They + 动词原形；He/She + 动词-s。","variations":["I walk to school.","She likes milk.","He watches TV."],"substitutions":[{"prompt":"把主语换成 She：She ___ up at seven. (get)","answer":"gets"},{"prompt":"用 every day 表达习惯：I play football ___.","answer":"every day"}]}},
+            {"type":"EXPRESSIONS","title":"常用语：谈论家庭","content":{"scenario":"向朋友介绍家庭成员和早晨安排。","items":[{"phrase":"This is my sister.","meaning":"这是我的姐妹。"},{"phrase":"We eat breakfast together.","meaning":"我们一起吃早餐。"},{"phrase":"What time do you get up?","meaning":"你几点起床？"}]}},
+            {"type":"VOCABULARY","title":"词汇：家庭与作息","content":{"note":"观察动词第三人称与家庭称谓。"}},
+            {"type":"READING","title":"读写：Our morning","content":{"speakingTask":"复述你和一位家人的早晨安排，至少说三句。","sampleAnswer":"I get up at seven. I eat breakfast with my mother. We go out at eight.","sentenceBreakdown":["I eat breakfast with my sister：with 表示和谁一起。","She likes milk, but I like juice：but 连接不同喜好。","After breakfast 表示早餐后。"]}}
+          ],
+          "vocabulary": [
+            {"word":"family","phonetic":"/ˈfæməli/","meaning":"家庭","collocation":"my family","rootTip":"集合名词，可指一家人","example":"I love my family."},
+            {"word":"sister","phonetic":"/ˈsɪstə/","meaning":"姐；妹","collocation":"my younger sister","rootTip":"对应男性称谓 brother","example":"My sister likes milk."},
+            {"word":"parents","phonetic":"/ˈpeərənts/","meaning":"父母","collocation":"my parents","rootTip":"常用复数表示父母两人","example":"I walk with my parents."},
+            {"word":"morning","phonetic":"/ˈmɔːnɪŋ/","meaning":"早晨","collocation":"in the morning","rootTip":"good morning 是早晨问候","example":"I read in the morning."},
+            {"word":"breakfast","phonetic":"/ˈbrekfəst/","meaning":"早餐","collocation":"eat breakfast","rootTip":"由 break + fast 构成","example":"We eat breakfast at home."},
+            {"word":"usually","phonetic":"/ˈjuːʒuəli/","meaning":"通常","collocation":"usually get up","rootTip":"频度副词，常位于实义动词前","example":"I usually walk to school."},
+            {"word":"walk","phonetic":"/wɔːk/","meaning":"步行","collocation":"walk to school","rootTip":"也可作名词 take a walk","example":"We walk to school."},
+            {"word":"together","phonetic":"/təˈɡeðə/","meaning":"一起","collocation":"eat together","rootTip":"常与 with 的意思呼应","example":"We eat breakfast together."}
+          ],
+          "passage": {"title":"Our morning","content":"I get up at seven every morning. My sister gets up at seven too. We wash our faces and eat breakfast with our parents. She likes milk, but I like orange juice. My father drinks tea. After breakfast, my sister and I walk to school. Our mother walks with us. We talk about our day on the way.","mainIdea":"作者介绍一家人早晨的作息、早餐喜好和上学方式。"},
+          "questions": [
+            {"section":2,"type":"SINGLE","prompt":"She ___ up at seven every day.","options":[{"id":"A","text":"get"},{"id":"B","text":"gets"},{"id":"C","text":"getting"},{"id":"D","text":"got"}],"answer":["B"],"explanation":"She 是第三人称单数，一般现在时用 gets。"},
+            {"section":4,"type":"MATCHING","prompt":"按左侧中文依次选择英文。","stems":["父母","早餐","一起"],"options":[{"id":"A","text":"together"},{"id":"B","text":"parents"},{"id":"C","text":"breakfast"}],"answer":["B","C","A"],"explanation":"parents 是父母，breakfast 是早餐，together 是一起。"},
+            {"section":5,"type":"SINGLE","prompt":"What does the writer drink?","options":[{"id":"A","text":"Milk"},{"id":"B","text":"Tea"},{"id":"C","text":"Orange juice"},{"id":"D","text":"Water"}],"answer":["C"],"explanation":"材料中 I like orange juice 给出答案。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"The writer and his sister take a bus to school.","answer":["FALSE"],"explanation":"my sister and I walk to school 说明他们步行。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"Why does the mother go with the children?","options":[{"id":"A","text":"She walks with them on the way to school"},{"id":"B","text":"She drives a bus"},{"id":"C","text":"She buys juice"},{"id":"D","text":"The passage says she stays home"}],"answer":["A"],"explanation":"Our mother walks with us 与后文 on the way 表明她陪孩子们步行。"}
+          ]
+        },
+        {
+          "id": "B1L03",
+          "number": 3,
+          "title": "时间与地点",
+          "description": "用 at/on/in 表达时间，用 there be 描述教室和社区。",
+          "durationMinutes": 22,
+          "sections": [
+            {"type":"PRONUNCIATION","title":"发音：/θ/ 与 /ð/，时间连读","content":{"phoneme":"/θ/ 是清辅音，如 three；/ð/ 是浊辅音，如 this。舌尖轻触齿间，注意振动差异。","minimalPairs":[{"left":"three","right":"free"},{"left":"think","right":"sink"},{"left":"there","right":"dare"}],"rhythm":"What TIME is IT 中 time 重读；at nine 可自然连读。","shadowSentences":["What time is it?","There is a clock on the wall."]}},
+            {"type":"PATTERN","title":"句型：There is / There are","content":{"pattern":"There is + 单数/不可数名词；There are + 复数名词。时间介词：at + 钟点，on + 星期，in + 月份。","variations":["There is a clock on the wall.","There are twenty desks.","We have English at nine on Monday."],"substitutions":[{"prompt":"换成 two books：There ___ two books on the desk.","answer":"are"},{"prompt":"在星期一：___ Monday","answer":"on"}]}},
+            {"type":"EXPRESSIONS","title":"常用语：问时间与位置","content":{"scenario":"询问上课时间以及物品在哪里。","items":[{"phrase":"What time is it?","meaning":"现在几点？"},{"phrase":"Where is my book?","meaning":"我的书在哪里？"},{"phrase":"It is near the window.","meaning":"它在窗户附近。"}]}},
+            {"type":"VOCABULARY","title":"词汇：时间与方位","content":{"note":"把时间介词和方位介词放在例句中记忆。"}},
+            {"type":"READING","title":"读写：Our classroom","content":{"speakingTask":"描述你的房间，使用一次 there is 和一次 there are。","sampleAnswer":"My room is small. There is a desk near the window. There are some books on it.","sentenceBreakdown":["There are twenty desks：复数 desks 决定使用 are。","My desk is near the window：near 表示附近。","on the wall 表示在墙面上。"]}}
+          ],
+          "vocabulary": [
+            {"word":"Monday","phonetic":"/ˈmʌndeɪ/","meaning":"星期一","collocation":"on Monday","rootTip":"星期名称首字母大写","example":"We have English on Monday."},
+            {"word":"time","phonetic":"/taɪm/","meaning":"时间","collocation":"what time","rootTip":"clock 指时钟，time 指时间","example":"What time is it?"},
+            {"word":"clock","phonetic":"/klɒk/","meaning":"时钟","collocation":"on the clock","rootTip":"watch 常指手表","example":"The clock is on the wall."},
+            {"word":"near","phonetic":"/nɪə/","meaning":"在……附近","collocation":"near the window","rootTip":"反义表达为 far from","example":"My desk is near the window."},
+            {"word":"under","phonetic":"/ˈʌndə/","meaning":"在……下面","collocation":"under the desk","rootTip":"反义词为 over/above","example":"The bag is under the desk."},
+            {"word":"window","phonetic":"/ˈwɪndəʊ/","meaning":"窗户","collocation":"open the window","rootTip":"动词短语用 open","example":"Please open the window."},
+            {"word":"wall","phonetic":"/wɔːl/","meaning":"墙","collocation":"on the wall","rootTip":"在墙表面用 on","example":"There is a picture on the wall."},
+            {"word":"between","phonetic":"/bɪˈtwiːn/","meaning":"在……之间","collocation":"between A and B","rootTip":"常与 and 搭配","example":"The desk is between two chairs."}
+          ],
+          "passage": {"title":"Our classroom","content":"Our classroom is big and bright. There are twenty desks in it. My desk is near the window. There is a clock on the wall above the door. Our books are in a blue box between two chairs. We have English at nine on Monday. The teacher usually stands near the window, so I can see her clearly.","mainIdea":"文章描述教室的物品位置以及周一英语课的安排。"},
+          "questions": [
+            {"section":2,"type":"SINGLE","prompt":"There ___ two books on the desk.","options":[{"id":"A","text":"is"},{"id":"B","text":"am"},{"id":"C","text":"are"},{"id":"D","text":"be"}],"answer":["C"],"explanation":"two books 是复数，使用 there are。"},
+            {"section":4,"type":"FILL","prompt":"补全：We have English ___ Monday.","answer":["on"],"explanation":"星期名称前用介词 on。"},
+            {"section":5,"type":"SINGLE","prompt":"Where is the clock?","options":[{"id":"A","text":"Near the window"},{"id":"B","text":"Above the door"},{"id":"C","text":"In a blue box"},{"id":"D","text":"Between two chairs"}],"answer":["B"],"explanation":"材料明确说 on the wall above the door。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"The writer can see the teacher clearly.","answer":["TRUE"],"explanation":"文末明确说 so I can see her clearly。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"Why does the writer mention the teacher's position?","options":[{"id":"A","text":"To explain why the classroom is big"},{"id":"B","text":"To connect the seat location with seeing the teacher"},{"id":"C","text":"To say the lesson is at nine"},{"id":"D","text":"To describe the blue box"}],"answer":["B"],"explanation":"座位靠窗、老师也站在窗边，因此能清楚看见，是位置描写的结果。"}
+          ]
+        },
+        {
+          "id": "B1L04",
+          "number": 4,
+          "title": "食物与饮料",
+          "description": "在餐厅点餐，区分可数与不可数名词并表达喜好。",
+          "durationMinutes": 24,
+          "sections": [
+            {"type":"PRONUNCIATION","title":"发音：/uː/ 与 /ʊ/，礼貌语调","content":{"phoneme":"/uː/ 较长，如 food；/ʊ/ 较短放松，如 good。点餐句 Would you like... 用上扬、礼貌的语调。","minimalPairs":[{"left":"fool","right":"full"},{"left":"pool","right":"pull"},{"left":"Luke","right":"look"}],"rhythm":"Would you LIKE some TEA 重读 like 和 tea；Would you 可自然连读。","shadowSentences":["Would you like some tea?","I would like a bowl of rice."]}},
+            {"type":"PATTERN","title":"句型：Would like 与数量","content":{"pattern":"I would like + 食物/饮料。How much + 不可数名词；How many + 可数复数。","variations":["I would like some rice.","How much water do you need?","How many apples would you like?"],"substitutions":[{"prompt":"用 tea 替换：I would like some ___.","answer":"tea"},{"prompt":"用 apples 提问：How ___ apples?","answer":"many"}]}},
+            {"type":"EXPRESSIONS","title":"常用语：餐厅点餐","content":{"scenario":"在餐厅看菜单并向服务员点餐。","items":[{"phrase":"Would you like some tea?","meaning":"你想喝点茶吗？"},{"phrase":"I would like a bowl of rice.","meaning":"我想要一碗米饭。"},{"phrase":"That is all, thank you.","meaning":"就这些，谢谢。"}]}},
+            {"type":"VOCABULARY","title":"词汇：食物与数量","content":{"note":"注意 rice、water 通常不可数，apple、egg 可数。"}},
+            {"type":"READING","title":"读写：At the café","content":{"speakingTask":"两人角色扮演点餐，每人至少说两句。","sampleAnswer":"Would you like some rice? Yes, please. I would like some tea too.","sentenceBreakdown":["The café is busy at noon：at noon 表示在中午。","I would like a bowl of rice：a bowl of 表示一碗。","That is all 表示就点这些。"]}}
+          ],
+          "vocabulary": [
+            {"word":"rice","phonetic":"/raɪs/","meaning":"米饭","collocation":"a bowl of rice","rootTip":"通常作不可数名词","example":"I would like a bowl of rice."},
+            {"word":"water","phonetic":"/ˈwɔːtə/","meaning":"水","collocation":"a glass of water","rootTip":"数量用 how much 询问","example":"Can I have some water?"},
+            {"word":"apple","phonetic":"/ˈæpəl/","meaning":"苹果","collocation":"a fresh apple","rootTip":"复数直接加 -s","example":"This apple is fresh."},
+            {"word":"milk","phonetic":"/mɪlk/","meaning":"牛奶","collocation":"a bottle of milk","rootTip":"不可数，不能直接加 -s","example":"She drinks milk for breakfast."},
+            {"word":"hungry","phonetic":"/ˈhʌŋɡri/","meaning":"饥饿的","collocation":"be hungry","rootTip":"名词为 hunger","example":"I am hungry at noon."},
+            {"word":"thirsty","phonetic":"/ˈθɜːsti/","meaning":"口渴的","collocation":"be thirsty","rootTip":"名词为 thirst","example":"We are thirsty after running."},
+            {"word":"menu","phonetic":"/ˈmenjuː/","meaning":"菜单","collocation":"read the menu","rootTip":"餐馆点餐常用词","example":"Please show me the menu."},
+            {"word":"bowl","phonetic":"/bəʊl/","meaning":"碗","collocation":"a bowl of soup","rootTip":"量词结构 a bowl of","example":"He eats a bowl of soup."}
+          ],
+          "passage": {"title":"At the café","content":"The café near our school is busy at noon. I am hungry, so I would like a bowl of rice and some vegetables. My friend Tom is not very hungry. He would like an egg and an apple. We are thirsty too. I order a glass of water, and Tom orders a bottle of milk. The waiter brings our food quickly. We thank him and enjoy our lunch.","mainIdea":"作者和 Tom 在学校附近的咖啡馆点午餐及饮料。"},
+          "questions": [
+            {"section":2,"type":"SINGLE","prompt":"How ___ water do you need?","options":[{"id":"A","text":"many"},{"id":"B","text":"much"},{"id":"C","text":"old"},{"id":"D","text":"long"}],"answer":["B"],"explanation":"water 是不可数名词，用 how much。"},
+            {"section":4,"type":"MULTIPLE","prompt":"Which are usually uncountable? Choose two.","options":[{"id":"A","text":"rice"},{"id":"B","text":"water"},{"id":"C","text":"apple"},{"id":"D","text":"egg"}],"answer":["A","B"],"explanation":"rice 和 water 通常不可数；apple 和 egg 可数。"},
+            {"section":5,"type":"SINGLE","prompt":"What does Tom eat?","options":[{"id":"A","text":"Rice and vegetables"},{"id":"B","text":"An egg and an apple"},{"id":"C","text":"Only milk"},{"id":"D","text":"A bowl of soup"}],"answer":["B"],"explanation":"材料说 He would like an egg and an apple。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"The writer orders a bottle of milk.","answer":["FALSE"],"explanation":"作者点水，Tom 点牛奶。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"Why does the writer order more food than Tom?","options":[{"id":"A","text":"The writer is hungrier"},{"id":"B","text":"Tom does not like eggs"},{"id":"C","text":"The café has no rice"},{"id":"D","text":"Tom is late"}],"answer":["A"],"explanation":"作者 hungry，而 Tom not very hungry，可推断作者更饿。"}
+          ]
+        },
+        {
+          "id": "B1L05",
+          "number": 5,
+          "title": "家居与街区",
+          "description": "描述房间与周边设施，并用问路句型找到目的地。",
+          "durationMinutes": 24,
+          "sections": [
+            {"type":"PRONUNCIATION","title":"发音：/h/ 与省音，问路口调","content":{"phoneme":"/h/ 是轻微送气音，如 home；hour 中 h 不发音。问路的 Excuse me 用礼貌升调。","minimalPairs":[{"left":"hill","right":"ill"},{"left":"heart","right":"art"},{"left":"hair","right":"air"}],"rhythm":"Excuse ME 重读 me；How can I GET to the BANK 重读 get 和 bank。","shadowSentences":["Excuse me, how can I get to the bank?","Go straight and turn left."]}},
+            {"type":"PATTERN","title":"句型：How can I get to...","content":{"pattern":"How can I get to + 地点？回答用 Go straight / Turn left / Turn right。","variations":["How can I get to the library?","Go straight for two minutes.","The bank is next to the park."],"substitutions":[{"prompt":"用 hospital 替换：How can I get to the ___?","answer":"hospital"},{"prompt":"左转：Turn ___.","answer":"left"}]}},
+            {"type":"EXPRESSIONS","title":"常用语：问路与指路","content":{"scenario":"在街区寻找银行或图书馆。","items":[{"phrase":"Excuse me, where is the bank?","meaning":"打扰一下，银行在哪里？"},{"phrase":"Go straight and turn left.","meaning":"直走然后左转。"},{"phrase":"It is next to the park.","meaning":"它在公园旁边。"}]}},
+            {"type":"VOCABULARY","title":"词汇：家庭与街区","content":{"note":"将地点与 next to、behind、across from 搭配记忆。"}},
+            {"type":"READING","title":"读写：My neighbourhood","content":{"speakingTask":"描述从你家到学校或商店的路线，至少三句。","sampleAnswer":"Go straight and turn left at the park. The shop is next to a bank. It is across from my school.","sentenceBreakdown":["There is a small park behind my house：behind 表示在后面。","across from the library 表示在图书馆对面。","It takes me five minutes：表示路程花费时间。"]}}
+          ],
+          "vocabulary": [
+            {"word":"home","phonetic":"/həʊm/","meaning":"家","collocation":"go home","rootTip":"go home 中通常不加 to","example":"I go home at five."},
+            {"word":"library","phonetic":"/ˈlaɪbrəri/","meaning":"图书馆","collocation":"in the library","rootTip":"与 book 的场所联想","example":"I read in the library."},
+            {"word":"bank","phonetic":"/bæŋk/","meaning":"银行","collocation":"go to the bank","rootTip":"也可表示河岸，需看语境","example":"The bank is next to the park."},
+            {"word":"straight","phonetic":"/streɪt/","meaning":"笔直地","collocation":"go straight","rootTip":"指路中常作副词","example":"Go straight for two minutes."},
+            {"word":"turn","phonetic":"/tɜːn/","meaning":"转弯","collocation":"turn left","rootTip":"left/right 前不加介词","example":"Turn right at the bank."},
+            {"word":"behind","phonetic":"/bɪˈhaɪnd/","meaning":"在……后面","collocation":"behind the house","rootTip":"反义表达 in front of","example":"The park is behind my house."},
+            {"word":"between","phonetic":"/bɪˈtwiːn/","meaning":"在……之间","collocation":"between the bank and the park","rootTip":"固定与 and 搭配","example":"The shop is between the bank and the park."},
+            {"word":"neighbourhood","phonetic":"/ˈneɪbəhʊd/","meaning":"街区；邻近地区","collocation":"in my neighbourhood","rootTip":"neighbour 是邻居","example":"There are two shops in my neighbourhood."}
+          ],
+          "passage": {"title":"My neighbourhood","content":"I live in a quiet neighbourhood. There is a small park behind my house. A library is across from the park, and a bank is next to the library. Between the bank and my house, there is a little café. My school is not far away. I walk past the park and turn left at the library. It takes me ten minutes to get there. On weekends, many families visit the park, so it becomes busy and lively.","mainIdea":"作者介绍住处附近的公园、图书馆、银行、咖啡馆和上学路线。"},
+          "questions": [
+            {"section":2,"type":"ORDER","prompt":"排列成一句指路用语。","options":[{"id":"A","text":"left"},{"id":"B","text":"Go straight"},{"id":"C","text":"and turn"}],"answer":["B","C","A"],"explanation":"正确表达是 Go straight and turn left。"},
+            {"section":4,"type":"SINGLE","prompt":"The café is ___ the bank and my house.","options":[{"id":"A","text":"between"},{"id":"B","text":"behind"},{"id":"C","text":"under"},{"id":"D","text":"on"}],"answer":["A"],"explanation":"between A and B 表示在两者之间。"},
+            {"section":5,"type":"SINGLE","prompt":"What is across from the park?","options":[{"id":"A","text":"The bank"},{"id":"B","text":"The library"},{"id":"C","text":"The café"},{"id":"D","text":"The school"}],"answer":["B"],"explanation":"材料说 A library is across from the park。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"The writer walks to school in ten minutes.","answer":["TRUE"],"explanation":"It takes me ten minutes 与上文 walk 表明步行十分钟。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"How does the park change on weekends?","options":[{"id":"A","text":"It becomes quieter"},{"id":"B","text":"It becomes busy and lively"},{"id":"C","text":"It closes to families"},{"id":"D","text":"It moves behind the library"}],"answer":["B"],"explanation":"文末说许多家庭来访，所以公园变得 busy and lively。"}
+          ]
+        },
+        {
+          "id": "B1L06",
+          "number": 6,
+          "title": "购物与价格",
+          "description": "询问价格、比较商品并清楚表达购买数量。",
+          "durationMinutes": 25,
+          "sections": [
+            {"type":"PRONUNCIATION","title":"发音：/ɒ/ 与 /ɔː/，数字重音","content":{"phoneme":"/ɒ/ 短促，如 shop；/ɔː/ 较长，如 small。价格中的数字要重读清楚，避免 fifteen 与 fifty 混淆。","minimalPairs":[{"left":"cot","right":"caught"},{"left":"spot","right":"sport"},{"left":"not","right":"nought"}],"rhythm":"HOW much is THIS shirt 重读 how much 和 shirt；fifteen 重音常在第二音节。","shadowSentences":["How much is this shirt?","It is fifteen yuan."]}},
+            {"type":"PATTERN","title":"句型：How much 与比较级","content":{"pattern":"How much is/are + 商品？比较两者：形容词比较级 + than。","variations":["How much are these shoes?","This bag is cheaper than that one.","The red one is better."],"substitutions":[{"prompt":"用 expensive 比较：This shirt is ___ than that one.","answer":"more expensive"},{"prompt":"询问单数商品价格：How much ___ this shirt?","answer":"is"}]}},
+            {"type":"EXPRESSIONS","title":"常用语：商店购物","content":{"scenario":"询问价格、尺寸并决定购买。","items":[{"phrase":"How much is this shirt?","meaning":"这件衬衫多少钱？"},{"phrase":"Can I try it on?","meaning":"我可以试穿吗？"},{"phrase":"I will take two kilos of apples.","meaning":"我买两千克苹果。"}]}},
+            {"type":"VOCABULARY","title":"词汇：价格与商品","content":{"note":"重点记忆价格形容词及购物搭配。"}},
+            {"type":"READING","title":"读写：At the market","content":{"speakingTask":"扮演顾客，询问一种商品的价格和数量，并比较两个选择。","sampleAnswer":"How much are these apples? The red ones are sweeter, but they are more expensive. I will take two kilos.","sentenceBreakdown":["The red apples are sweeter than...：比较级 + than。","but they are more expensive：but 表示价格上的转折。","for my family 表示为家人购买。"]}}
+          ],
+          "vocabulary": [
+            {"word":"price","phonetic":"/praɪs/","meaning":"价格","collocation":"a good price","rootTip":"询问价格口语常用 how much","example":"The price of this bag is good."},
+            {"word":"cheap","phonetic":"/tʃiːp/","meaning":"便宜的","collocation":"cheaper than","rootTip":"比较级 cheaper","example":"This bag is cheaper than that one."},
+            {"word":"expensive","phonetic":"/ɪkˈspensɪv/","meaning":"昂贵的","collocation":"more expensive","rootTip":"多音节词比较级加 more","example":"The red apples are more expensive."},
+            {"word":"fresh","phonetic":"/freʃ/","meaning":"新鲜的","collocation":"fresh fruit","rootTip":"可描述食物新鲜","example":"The apples are fresh."},
+            {"word":"size","phonetic":"/saɪz/","meaning":"尺寸","collocation":"the right size","rootTip":"try on 后检查尺寸","example":"This shirt is the right size."},
+            {"word":"kilo","phonetic":"/ˈkiːləʊ/","meaning":"千克","collocation":"two kilos of apples","rootTip":"复数常写作 kilos","example":"I would like two kilos of apples."},
+            {"word":"choose","phonetic":"/tʃuːz/","meaning":"选择","collocation":"choose a shirt","rootTip":"名词为 choice","example":"I choose the blue shirt."},
+            {"word":"try","phonetic":"/traɪ/","meaning":"尝试","collocation":"try on a shirt","rootTip":"try on 表示试穿","example":"Can I try on this shirt?"}
+          ],
+          "passage": {"title":"At the market","content":"The fruit in this market is fresh. The red apples are sweeter than the green ones, but they are more expensive. I choose two kilos of red apples for my family. Then I look at two shirts. The blue shirt is cheaper than the white one, but the white shirt is a better size for me. I try it on and decide to buy it. The shopkeeper tells me the price is fifty yuan.","mainIdea":"作者在市场比较并购买苹果和衬衫。"},
+          "questions": [
+            {"section":2,"type":"SINGLE","prompt":"This bag is ___ than that one.","options":[{"id":"A","text":"cheap"},{"id":"B","text":"cheaper"},{"id":"C","text":"cheapest"},{"id":"D","text":"the cheapest"}],"answer":["B"],"explanation":"than 提示两者比较，用 cheaper。"},
+            {"section":4,"type":"FILL","prompt":"补全：How ___ is this shirt?","answer":["much"],"explanation":"How much 用于询问价格。"},
+            {"section":5,"type":"SINGLE","prompt":"Why does the writer choose the white shirt?","options":[{"id":"A","text":"It is cheaper"},{"id":"B","text":"It is a better size"},{"id":"C","text":"It is sweeter"},{"id":"D","text":"It costs fifteen yuan"}],"answer":["B"],"explanation":"材料说 white shirt is a better size for me。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"The writer buys green apples.","answer":["FALSE"],"explanation":"作者选择 red apples。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"What trade-off does the writer make about the shirts?","options":[{"id":"A","text":"Pays more for a better fit"},{"id":"B","text":"Chooses the cheaper poor fit"},{"id":"C","text":"Buys both shirts"},{"id":"D","text":"Buys no shirt"}],"answer":["A"],"explanation":"白色更合身但蓝色更便宜，作者选择白色，可推断为合身支付更高价格。"}
+          ]
+        },
+        {
+          "id": "B1L07",
+          "number": 7,
+          "title": "兴趣与周末",
+          "description": "谈论爱好和频度，用 be going to 说出周末计划。",
+          "durationMinutes": 25,
+          "sections": [
+            {"type":"PRONUNCIATION","title":"发音：/ŋ/ 与 /n/，活动连读","content":{"phoneme":"/ŋ/ 如 playing，舌后部抬起，不要在词尾额外加 /g/；/n/ 如 nice。going to 在自然口语中常弱读。","minimalPairs":[{"left":"sing","right":"sin"},{"left":"ring","right":"rin"},{"left":"thing","right":"thin"}],"rhythm":"I am GOing to PLAY BASKETball 重读主要活动。","shadowSentences":["I am going to play basketball.","What do you usually do on weekends?"]}},
+            {"type":"PATTERN","title":"句型：频度与 be going to","content":{"pattern":"I usually + 动词原形；be going to + 动词原形表示已有计划。","variations":["I usually read on Sundays.","We are going to visit our grandparents.","She is going to ride a bike."],"substitutions":[{"prompt":"主语换 She：She ___ going to swim.","answer":"is"},{"prompt":"表示周末计划：I am going to ___ basketball.","answer":"play"}]}},
+            {"type":"EXPRESSIONS","title":"常用语：邀约与回应","content":{"scenario":"邀请朋友参加周末活动并回应。","items":[{"phrase":"Would you like to play basketball?","meaning":"你想打篮球吗？"},{"phrase":"That sounds great.","meaning":"听起来很棒。"},{"phrase":"Sorry, I have other plans.","meaning":"抱歉，我有其他安排。"}]}},
+            {"type":"VOCABULARY","title":"词汇：兴趣与活动","content":{"note":"比较 play、go、do 与不同活动的搭配。"}},
+            {"type":"READING","title":"读写：A busy weekend","content":{"speakingTask":"说出你的周末计划和一项平时爱好，至少四句。","sampleAnswer":"I usually read on weekends. This Saturday, I am going to play basketball. On Sunday, I will visit my aunt. I think it will be fun.","sentenceBreakdown":["I have already finished：现在完成时强调作业已完成。","be going to visit 表示事先计划。","On Sunday 与 Saturday 一起理清时间顺序。"]}}
+          ],
+          "vocabulary": [
+            {"word":"hobby","phonetic":"/ˈhɒbi/","meaning":"爱好","collocation":"have a hobby","rootTip":"复数为 hobbies","example":"Reading is my hobby."},
+            {"word":"weekend","phonetic":"/ˌwiːkˈend/","meaning":"周末","collocation":"on weekends","rootTip":"week + end 构成","example":"I play basketball on weekends."},
+            {"word":"usually","phonetic":"/ˈjuːʒuəli/","meaning":"通常","collocation":"usually play","rootTip":"描述日常频度","example":"I usually read at night."},
+            {"word":"basketball","phonetic":"/ˈbɑːskɪtbɔːl/","meaning":"篮球","collocation":"play basketball","rootTip":"球类前通常不加 the","example":"We play basketball after school."},
+            {"word":"ride","phonetic":"/raɪd/","meaning":"骑","collocation":"ride a bike","rootTip":"过去式 rode","example":"I ride a bike in the park."},
+            {"word":"invite","phonetic":"/ɪnˈvaɪt/","meaning":"邀请","collocation":"invite a friend","rootTip":"名词 invitation","example":"I invite my friend to play."},
+            {"word":"plan","phonetic":"/plæn/","meaning":"计划","collocation":"make a plan","rootTip":"也可作动词 plan to do","example":"What is your plan for Sunday?"},
+            {"word":"sound","phonetic":"/saʊnd/","meaning":"听起来","collocation":"sound great","rootTip":"此处作系动词，后接形容词","example":"That sounds great."}
+          ],
+          "passage": {"title":"A busy weekend","content":"I usually read or ride my bike on weekends. This weekend will be different. I have already finished my homework, so I am going to visit my grandparents on Saturday. We will have lunch together in a small restaurant. On Sunday morning, I am going to play basketball with my friends. In the afternoon, I will help my mother clean the house. It will be a busy weekend, but I think it will be enjoyable.","mainIdea":"作者介绍与往常不同的周末安排，包括看望祖父母、运动和做家务。"},
+          "questions": [
+            {"section":2,"type":"SINGLE","prompt":"We ___ visit our grandparents tomorrow.","options":[{"id":"A","text":"are going to"},{"id":"B","text":"going to"},{"id":"C","text":"goes to"},{"id":"D","text":"visited"}],"answer":["A"],"explanation":"已有计划使用 be going to，We 对应 are。"},
+            {"section":4,"type":"MULTIPLE","prompt":"Which are correct activity collocations? Choose two.","options":[{"id":"A","text":"play basketball"},{"id":"B","text":"ride a bike"},{"id":"C","text":"ride basketball"},{"id":"D","text":"play a bike"}],"answer":["A","B"],"explanation":"固定搭配是 play basketball 和 ride a bike。"},
+            {"section":5,"type":"SINGLE","prompt":"What will the writer do on Saturday?","options":[{"id":"A","text":"Play basketball"},{"id":"B","text":"Visit grandparents"},{"id":"C","text":"Clean the house"},{"id":"D","text":"Ride a bike"}],"answer":["B"],"explanation":"周六安排是 visit my grandparents。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"The writer has not finished the homework.","answer":["FALSE"],"explanation":"have already finished 表明已完成。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"How does the writer feel about the busy weekend?","options":[{"id":"A","text":"Positive"},{"id":"B","text":"Angry"},{"id":"C","text":"Worried"},{"id":"D","text":"Bored"}],"answer":["A"],"explanation":"but I think it will be enjoyable 表明态度积极。"}
+          ]
+        },
+        {
+          "id": "B1L08",
+          "number": 8,
+          "title": "旅行与计划",
+          "description": "描述简单旅行计划，阅读较长行程并表达最期待的活动。",
+          "durationMinutes": 30,
+          "sections": [
+            {"type":"PRONUNCIATION","title":"发音：/r/ 与 /l/，行程节奏","content":{"phoneme":"美式 /r/ 舌尖不碰上腭，如 right；/l/ 舌尖抵上齿龈，如 light。列举行程时在最后一项前停顿。","minimalPairs":[{"left":"right","right":"light"},{"left":"road","right":"load"},{"left":"rice","right":"lice"}],"rhythm":"We are going to take the TRAIN，重读交通方式；列举 visit the lake, take photos and try local food 时分组。","shadowSentences":["We are going to travel by train.","I am looking forward to the trip."]}},
+            {"type":"PATTERN","title":"句型：旅行计划与 look forward to","content":{"pattern":"be going to + 动词原形表示计划；look forward to + 名词/动名词表示期待。","variations":["We are going to travel by train.","I look forward to the trip.","I look forward to seeing the lake."],"substitutions":[{"prompt":"用 by plane 替换：We are going to travel ___.","answer":"by plane"},{"prompt":"用 seeing the lake 替换：I look forward to ___.","answer":"seeing the lake"}]}},
+            {"type":"EXPRESSIONS","title":"常用语：讨论旅行","content":{"scenario":"与家人讨论交通、天气和最期待的活动。","items":[{"phrase":"We are going to travel by train.","meaning":"我们打算乘火车旅行。"},{"phrase":"What is the weather like there?","meaning":"那里天气怎么样？"},{"phrase":"I am looking forward to the trip.","meaning":"我期待这次旅行。"}]}},
+            {"type":"VOCABULARY","title":"词汇：旅行与行程","content":{"note":"把交通方式、活动和天气词组合成自己的行程。"}},
+            {"type":"READING","title":"读写：Our trip to the lake（册末长阅读）","content":{"speakingTask":"复述两日行程，并说明你最期待的一项活动及原因。","sampleAnswer":"On Saturday, we are going to take the train and visit the lake. On Sunday, we will walk in the old town. I look forward to taking photos because I like nature.","sentenceBreakdown":["We have been planning...for a month：现在完成进行概念只作理解，不要求掌握术语。","After we arrive 引导到达后的动作。","If it rains 描述天气不佳时的备选计划。","I am especially looking forward to...：especially 强调最期待的部分。"]}}
+          ],
+          "vocabulary": [
+            {"word":"travel","phonetic":"/ˈtrævəl/","meaning":"旅行","collocation":"travel by train","rootTip":"trip 常指一次旅行","example":"We travel by train."},
+            {"word":"journey","phonetic":"/ˈdʒɜːni/","meaning":"旅程","collocation":"a long journey","rootTip":"强调旅途过程","example":"The journey takes two hours."},
+            {"word":"weather","phonetic":"/ˈweðə/","meaning":"天气","collocation":"sunny weather","rootTip":"通常不可数","example":"What is the weather like?"},
+            {"word":"ticket","phonetic":"/ˈtɪkɪt/","meaning":"票","collocation":"buy a train ticket","rootTip":"train/bus/plane ticket 均可搭配","example":"I buy a train ticket online."},
+            {"word":"arrive","phonetic":"/əˈraɪv/","meaning":"到达","collocation":"arrive at the station","rootTip":"arrive in 接大地点，at 接小地点","example":"We arrive at the station at nine."},
+            {"word":"local","phonetic":"/ˈləʊkəl/","meaning":"当地的","collocation":"local food","rootTip":"local people 指当地人","example":"I want to try local food."},
+            {"word":"photo","phonetic":"/ˈfəʊtəʊ/","meaning":"照片","collocation":"take photos","rootTip":"复数 photos，不加 -es","example":"We take photos by the lake."},
+            {"word":"especially","phonetic":"/ɪˈspeʃəli/","meaning":"尤其；特别","collocation":"especially like","rootTip":"用于强调某一项","example":"I especially like the old town."}
+          ],
+          "passage": {"title":"Our trip to the lake","content":"My family and I have been planning a short trip for a month. Next Saturday, we are going to take an early train to a city near a large lake. The journey will take about two hours. After we arrive, we will leave our bags at a small hotel and walk to the lake. If the weather is sunny, we will take a boat and enjoy the beautiful view. My sister wants to take many photos, while I am looking forward to trying the local food. In the evening, we plan to walk around the old town and buy some small gifts. On Sunday, we will visit a museum near the station. If it rains, we can spend more time there instead of walking outside. We will return home on Sunday afternoon. It is only a two-day trip, but our family thinks it will be relaxing and full of interesting experiences.","mainIdea":"文章按时间顺序介绍一家人的湖边两日游计划、天气备选方案和各自期待。"},
+          "questions": [
+            {"section":2,"type":"SINGLE","prompt":"I look forward to ___ the lake.","options":[{"id":"A","text":"see"},{"id":"B","text":"seeing"},{"id":"C","text":"saw"},{"id":"D","text":"sees"}],"answer":["B"],"explanation":"look forward to 中 to 是介词，后接动名词 seeing。"},
+            {"section":4,"type":"MATCHING","prompt":"按左侧中文依次选择英文。","stems":["天气","到达","当地的"],"options":[{"id":"A","text":"local"},{"id":"B","text":"weather"},{"id":"C","text":"arrive"}],"answer":["B","C","A"],"explanation":"weather 是天气，arrive 是到达，local 是当地的。"},
+            {"section":5,"type":"SINGLE","prompt":"What is the best summary of the trip?","options":[{"id":"A","text":"A two-day family trip with different activities and a rainy-day plan"},{"id":"B","text":"A month-long business journey"},{"id":"C","text":"A trip only to a museum"},{"id":"D","text":"A day at home"}],"answer":["A"],"explanation":"全文介绍两日家庭旅行，并给出下雨时的博物馆安排。"},
+            {"section":5,"scope":"UNIT_TEST","type":"TRUE_FALSE","prompt":"The family will return home on Sunday afternoon.","answer":["TRUE"],"explanation":"材料明确说 We will return home on Sunday afternoon。"},
+            {"section":5,"scope":"BOOK_TEST","type":"SINGLE","prompt":"Why does the writer mention the museum?","options":[{"id":"A","text":"It is the only planned activity"},{"id":"B","text":"It is a Sunday activity and a bad-weather option"},{"id":"C","text":"It is where the family will stay"},{"id":"D","text":"It is far from the station"}],"answer":["B"],"explanation":"博物馆既在周日行程中，又能在下雨时替代户外活动。"}
+          ]
+        }
+      ]
+    },
+    {
+      "id":"BOOK2","code":"A2","title":"基础 A2","description":"围绕过去经历、日常事务和未来安排拓展表达。","outlineOnly":true,
+      "lessons":[
+        {"id":"B2L01","number":1,"title":"过去的一次经历","description":"用一般过去时按顺序讲述经历。","durationMinutes":25},
+        {"id":"B2L02","number":2,"title":"交通与旅行","description":"比较交通方式并处理旅行中的常见问题。","durationMinutes":25},
+        {"id":"B2L03","number":3,"title":"购物与协商","description":"讨论价格、退换和购买决定。","durationMinutes":25},
+        {"id":"B2L04","number":4,"title":"健康与生活","description":"描述症状、习惯并给出简单建议。","durationMinutes":25},
+        {"id":"B2L05","number":5,"title":"学习与工作","description":"谈论日程、责任和技能。","durationMinutes":25},
+        {"id":"B2L06","number":6,"title":"朋友与关系","description":"描述人物并表达感受与邀请。","durationMinutes":25},
+        {"id":"B2L07","number":7,"title":"城市与生活","description":"比较居住环境并讨论社区变化。","durationMinutes":25},
+        {"id":"B2L08","number":8,"title":"未来计划","description":"说明计划、预测与个人目标。","durationMinutes":30}
+      ]
+    },
+    {
+      "id":"BOOK3","code":"B1","title":"进阶 B1","description":"围绕观点、经历和实际问题组织更连贯的表达。","outlineOnly":true,
+      "lessons":[
+        {"id":"B3L01","number":1,"title":"表达观点","description":"提出观点并给出理由和例子。","durationMinutes":30},
+        {"id":"B3L02","number":2,"title":"叙述经历","description":"用时间线清晰叙述个人经历。","durationMinutes":30},
+        {"id":"B3L03","number":3,"title":"工作与学习","description":"讨论选择、挑战与成果。","durationMinutes":30},
+        {"id":"B3L04","number":4,"title":"科技与媒体","description":"评价科技对生活的影响。","durationMinutes":30},
+        {"id":"B3L05","number":5,"title":"环境与旅行","description":"讨论可持续旅行与环境责任。","durationMinutes":30},
+        {"id":"B3L06","number":6,"title":"文化差异","description":"比较习惯并避免简单刻板判断。","durationMinutes":30},
+        {"id":"B3L07","number":7,"title":"解决问题","description":"分析原因、选项与可能结果。","durationMinutes":30},
+        {"id":"B3L08","number":8,"title":"演讲与讨论","description":"完成有结构的短篇展示与互动。","durationMinutes":30}
+      ]
+    },
+    {
+      "id":"BOOK4","code":"B2","title":"高阶 B2","description":"训练抽象议题、论证和较正式的读写与口语表达。","outlineOnly":true,
+      "lessons":[
+        {"id":"B4L01","number":1,"title":"抽象观点","description":"界定概念并表达细致立场。","durationMinutes":30},
+        {"id":"B4L02","number":2,"title":"论证结构","description":"组织论点、证据与让步。","durationMinutes":30},
+        {"id":"B4L03","number":3,"title":"学术阅读","description":"识别主旨、证据和作者态度。","durationMinutes":30},
+        {"id":"B4L04","number":4,"title":"职场沟通","description":"进行清晰、得体的协商与汇报。","durationMinutes":30},
+        {"id":"B4L05","number":5,"title":"媒体辨析","description":"评估来源、偏见与论证可靠性。","durationMinutes":30},
+        {"id":"B4L06","number":6,"title":"全球议题","description":"讨论环境、科技与社会的复杂关系。","durationMinutes":30},
+        {"id":"B4L07","number":7,"title":"正式写作","description":"完成结构严谨、语气恰当的短文。","durationMinutes":30},
+        {"id":"B4L08","number":8,"title":"综合研讨","description":"整合听说读写完成主题研讨。","durationMinutes":30}
+      ]
+    }
+  ]
+}
