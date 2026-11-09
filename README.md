@@ -27,7 +27,7 @@ $env:ANDROID_HOME = "<Android SDK 目录>"
 
 Debug APK 输出：`app/build/outputs/apk/debug/app-debug.apk`。应用包名为 `com.sierxue.english`，启动图标为自适应图标配合 SX 字母矢量占位方案，无外部图片素材。
 
-本次构建为 v1.0.1（versionCode 10001），使用 AGP 8.9.2 + Gradle 8.14.3 + Room 2.6.1。APK 大小为 11,327,503 字节（约 10.8 MiB），SHA256 为 `9AA8F3D0A6EB559CC9A34BAB1A5BDC93475894A6EC4FCA9A67CBDDBA8814D380`；`:app:testDebugUnitTest` 的 3 项跟读评分测试全部通过。构建时 adb 无已连接设备，因此尚未执行真机安装、系统 TTS/语音识别和在线更新实机验收。
+本次构建为 v1.0.2（versionCode 10002），使用 AGP 8.9.2 + Gradle 8.14.3 + Room 2.6.1。APK 大小为 11,286,405 字节（约 10.8 MiB），SHA256 为 `D81981F339D270AAE0E27E5DF4D4F9E1248B2D274315D74FA1F2EC6ED4DE83CC`；`:app:testDebugUnitTest` 的 3 项跟读评分测试全部通过。构建时 adb 无已连接设备，因此尚未执行真机安装、系统 TTS/语音识别和在线更新实机验收。
 
 ## 在线更新
 
@@ -39,7 +39,9 @@ Debug APK 输出：`app/build/outputs/apk/debug/app-debug.apk`。应用包名为
 
 ### 小米 / 澎湃 OS 提示系统 TTS 不可用
 
-思而学会先读取系统默认引擎，再依次尝试其他已安装引擎；每个引擎初始化超时为 5 秒。英语按 `en-US → en-GB → ROOT` 回落，不会因某一种英语语音数据缺失就直接终止全部发音。
+思而学会优先使用不指定引擎包名的系统默认 `TextToSpeech` 实例，失败或 5 秒超时后再遍历其他已安装引擎。英语按 `en-US → en-GB → ROOT` 回落，不会因某一种英语语音数据缺失就直接终止全部发音。
+
+**Android 11+ 引擎列表为空时，优先检查包可见性。** v1.0.2 在清单中仅声明 `android.intent.action.TTS_SERVICE` 查询，不申请宽泛包可见性。诊断页会显示 `queryIntentServices(TTS_SERVICE)` 的本次/上次返回数量、默认引擎解析结果和构造异常。空列表不再直接等于“系统无 TTS”：默认实例仍会先尝试；若补声明后仍为空，再检查 HyperOS 的应用权限/自启动限制、系统“文字转语音”输出是否启用，以及小米私有引擎是否不响应标准服务查询。
 
 进入「设置 → 发音诊断」可以查看并复制默认引擎、版本、引擎列表、en-US/zh-CN 数据状态、当前语言、最近 onInit 返回码和耗时，也可以重新初始化、测试朗读 Hello、前往系统设置或手动切换引擎。手动选择的引擎会持久化。若系统 TTS 全部不可用，喇叭仅降级为不可用状态，课程不受阻塞；已配置的在线 TTS 会继续独立工作。
 

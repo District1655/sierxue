@@ -88,6 +88,7 @@ data class AppSettings(
     val assistantSpeechRate: Float = 0.9f,
     val assistantEnabled: Boolean = true,
     val preferredTtsEngine: String = "",
+    val ttsServiceQueryCount: Int = -1,
     val chat: ChatConfig = ChatConfig(),
     val tts: TtsConfig = TtsConfig(),
 )
