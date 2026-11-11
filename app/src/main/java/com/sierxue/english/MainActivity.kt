@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onStop() {
+        container.localEngine.cancel()
         container.speech.stopAll()
         super.onStop()
     }

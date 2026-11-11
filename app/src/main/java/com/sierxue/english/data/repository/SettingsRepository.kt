@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.sierxue.english.domain.AiChannel
 import com.sierxue.english.domain.AppSettings
 import com.sierxue.english.domain.ChatConfig
 import com.sierxue.english.domain.TtsConfig
@@ -67,6 +68,10 @@ class SettingsRepository(private val context: Context) {
             tts = selectTts(ttsEndpoints),
             chatEndpoints = chatEndpoints,
             ttsEndpoints = ttsEndpoints,
+            aiChannel = runCatching { AiChannel.valueOf(p[AI_CHANNEL] ?: AiChannel.CLOUD_FIRST.name) }
+                .getOrDefault(AiChannel.CLOUD_FIRST),
+            localModelId = p[LOCAL_MODEL_ID] ?: "qwen3_q8_0",
+            localThinkingEnabled = p[LOCAL_THINKING] ?: false,
         )
     }
 
@@ -80,6 +85,9 @@ class SettingsRepository(private val context: Context) {
     suspend fun setAssistantEnabled(value: Boolean) = context.settingsStore.edit { it[ASSISTANT_ENABLED] = value }
     suspend fun setTtsEnginePackage(value: String) = context.settingsStore.edit { it[TTS_ENGINE_PACKAGE] = value.trim() }
     suspend fun setTtsServiceQueryCount(value: Int) = context.settingsStore.edit { it[TTS_SERVICE_QUERY_COUNT] = value }
+    suspend fun setAiChannel(value: AiChannel) = context.settingsStore.edit { it[AI_CHANNEL] = value.name }
+    suspend fun setLocalModel(id: String) = context.settingsStore.edit { it[LOCAL_MODEL_ID] = id }
+    suspend fun setLocalThinking(value: Boolean) = context.settingsStore.edit { it[LOCAL_THINKING] = value }
 
     suspend fun saveChatEndpoints(endpoints: List<ChatConfig>, keyInputs: Map<String, String> = emptyMap()) {
         require(endpoints.size in 1..5) { "对话端点数量为 1～5 个" }
@@ -232,6 +240,9 @@ class SettingsRepository(private val context: Context) {
         val TTS_FORMAT = stringPreferencesKey("tts_format")
         val CHAT_ENDPOINTS = stringPreferencesKey("chat_endpoints")
         val TTS_ENDPOINTS = stringPreferencesKey("tts_endpoints")
+        val AI_CHANNEL = stringPreferencesKey("ai_channel")
+        val LOCAL_MODEL_ID = stringPreferencesKey("local_model_id")
+        val LOCAL_THINKING = booleanPreferencesKey("local_thinking")
         const val CHAT_KEY = "openai_chat_key"
         const val TTS_KEY = "openai_tts_key"
     }

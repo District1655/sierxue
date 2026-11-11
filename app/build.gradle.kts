@@ -1,3 +1,7 @@
+val llamaCppRoot = (findProperty("LLAMA_CPP_ROOT") as String?)
+    ?: System.getenv("LLAMA_CPP_ROOT")
+    ?: file("../third_party/llama.cpp-src").absolutePath
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -12,8 +16,23 @@ android {
         applicationId = "com.sierxue.english"
         minSdk = 24
         targetSdk = 34
-        versionCode = 10003
-        versionName = "1.0.3"
+        versionCode = 10200
+        versionName = "1.2.0"
+        ndk { abiFilters += "arm64-v8a" }
+        if (llamaCppRoot.isNotBlank()) {
+            externalNativeBuild {
+                cmake {
+                    arguments += listOf("-DLLAMA_CPP_ROOT=$llamaCppRoot", "-DANDROID_STL=c++_static")
+                }
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
 
     buildTypes {

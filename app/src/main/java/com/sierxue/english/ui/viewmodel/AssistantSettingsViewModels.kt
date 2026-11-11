@@ -1,11 +1,14 @@
 package com.sierxue.english.ui.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sierxue.english.assistant.AssistantContextHolder
 import com.sierxue.english.assistant.AssistantRepository
 import com.sierxue.english.data.local.AssistantConversationEntity
 import com.sierxue.english.data.local.AssistantMessageEntity
+import com.sierxue.english.data.local.LlamaCppEngine
+import com.sierxue.english.data.local.LocalModelAssetStore
 import com.sierxue.english.data.remote.ChatSource
 import com.sierxue.english.data.remote.EndpointHealthStore
 import com.sierxue.english.data.remote.ErrorClassifier
@@ -13,6 +16,7 @@ import com.sierxue.english.data.remote.OpenAiChatClient
 import com.sierxue.english.data.remote.OpenAiTtsClient
 import com.sierxue.english.data.repository.SettingsRepository
 import com.sierxue.english.data.repository.StudyRepository
+import com.sierxue.english.domain.AiChannel
 import com.sierxue.english.domain.AppSettings
 import com.sierxue.english.domain.ChatConfig
 import com.sierxue.english.domain.TtsConfig
@@ -31,6 +35,7 @@ class AssistantViewModel(
     private val contextHolder: AssistantContextHolder,
     private val settings: SettingsRepository,
     private val speech: SpeechManager,
+    private val localEngine: LlamaCppEngine,
 ) : ViewModel() {
     private val _state = MutableStateFlow(AssistantUiState())
     val state: StateFlow<AssistantUiState> = _state
@@ -39,6 +44,7 @@ class AssistantViewModel(
     val preferences = settings.settings.map { it.assistantEnabled to it.assistantSpeechRate }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true to 0.9f)
     private var messagesJob: Job? = null
+    private var sendJob: Job? = null
     private var lastText = ""
 
     init {
@@ -65,7 +71,8 @@ class AssistantViewModel(
         _state.value = _state.value.copy(showHistory = false)
     }
 
-    fun send(text: String, autoSpeak: Boolean = false) = viewModelScope.launch {
+    fun send(text: String, autoSpeak: Boolean = false) {
+        sendJob = viewModelScope.launch {
         if (text.isBlank() || _state.value.loading) return@launch
         lastText = text
         val id = _state.value.activeConversationId ?: repository.ensureConversation().also { activate(it) }
@@ -83,9 +90,18 @@ class AssistantViewModel(
                 streamingText = null,
             )
             if (autoSpeak) speech.toggle("assistant_${System.currentTimeMillis()}", reply.text, preferences.value.second)
+        } catch (error: kotlinx.coroutines.CancellationException) {
+            _state.value = _state.value.copy(loading = false, status = "已取消", streamingText = null)
         } catch (error: Exception) {
             _state.value = _state.value.copy(loading = false, status = "发送失败：${error.message ?: "未知错误"}", canRetry = true)
         }
+        }
+    }
+
+    fun cancelGeneration() {
+        localEngine.cancel()
+        sendJob?.cancel()
+        _state.value = _state.value.copy(loading = false, status = "已取消", streamingText = null)
     }
 
     fun retry() { if (lastText.isNotBlank()) send(lastText) }
@@ -133,10 +149,44 @@ class SettingsViewModel(
     private val ttsCacheDir: File,
     private val speech: SpeechManager,
     val healthStore: EndpointHealthStore,
+    private val modelAssets: LocalModelAssetStore,
+    private val localEngine: LlamaCppEngine,
 ) : ViewModel() {
     val values: StateFlow<AppSettings> = settings.settings.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppSettings())
     private val _message = MutableStateFlow<String?>(null)
     val message: StateFlow<String?> = _message
+    val models = modelAssets.status
+    val loadedModelId = localEngine.loadedModelId
+    val modelUsageBytes = MutableStateFlow(modelAssets.usageBytes())
+
+    fun setAiChannel(value: AiChannel) = viewModelScope.launch { settings.setAiChannel(value) }
+    fun setLocalThinking(value: Boolean) = viewModelScope.launch { settings.setLocalThinking(value) }
+    fun selectLocalModel(id: String) = viewModelScope.launch { settings.setLocalModel(id) }
+    fun downloadModel(id: String) = viewModelScope.launch {
+        _message.value = "开始下载模型，可取消或稍后续传"
+        runCatching { modelAssets.download(id) }
+            .onSuccess { _message.value = "模型下载并通过 SHA256 校验" }
+            .onFailure { _message.value = modelAssets.statusOf(id).error ?: "下载失败" }
+        modelUsageBytes.value = modelAssets.usageBytes()
+    }
+    fun importModel(id: String, uri: Uri) = viewModelScope.launch {
+        _message.value = "正在导入并校验模型…"
+        runCatching { modelAssets.import(id, uri) }
+            .onSuccess { _message.value = "模型导入并通过 SHA256 校验" }
+            .onFailure { _message.value = modelAssets.statusOf(id).error ?: "导入失败" }
+        modelUsageBytes.value = modelAssets.usageBytes()
+    }
+    fun cancelModelTransfer(id: String) {
+        modelAssets.cancel(id)
+        _message.value = "正在取消，下载会保留断点"
+    }
+    fun deleteModel(id: String) = viewModelScope.launch {
+        localEngine.cancel()
+        localEngine.close()
+        modelAssets.delete(id)
+        modelUsageBytes.value = modelAssets.usageBytes()
+        _message.value = "模型已删除"
+    }
 
     fun setBook(bookId: String) = viewModelScope.launch {
         val first = study.units(bookId).firstOrNull() ?: return@launch

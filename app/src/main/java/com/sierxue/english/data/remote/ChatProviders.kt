@@ -1,6 +1,8 @@
 package com.sierxue.english.data.remote
 
+import com.sierxue.english.data.local.LocalModelProvider
 import com.sierxue.english.data.repository.SettingsRepository
+import com.sierxue.english.domain.AiChannel
 import com.sierxue.english.domain.ChatConfig
 import com.sierxue.english.domain.ChatProvider
 import com.sierxue.english.domain.ChatRequest
@@ -40,7 +42,7 @@ class OfflineFallbackProvider : ChatProvider {
     override suspend fun respond(request: ChatRequest): String = request.fallbackText
 }
 
-enum class ChatSource { REMOTE, OFFLINE }
+enum class ChatSource { REMOTE, LOCAL, OFFLINE }
 enum class AssistantChannelPhase { MAIN_HEALTHY, RETRYING, FALLBACK_ACTIVE, OFFLINE }
 
 data class ChannelMonitor(
@@ -59,6 +61,7 @@ data class ProviderReply(
 class ChatProviderRouter(
     private val settings: SettingsRepository,
     private val remote: RemoteChatProvider,
+    private val local: LocalModelProvider,
     private val offline: OfflineFallbackProvider,
     private val runner: StableRequestRunner,
 ) {
@@ -73,6 +76,8 @@ class ChatProviderRouter(
         onDelta: suspend (String) -> Unit = {},
         userInitiated: Boolean = true,
     ): ProviderReply {
+        val channel = settings.settings.first().aiChannel
+        if (channel == AiChannel.LOCAL_ONLY) return localReply(request, null, onDelta)
         val cacheKey = if (isPureQuery(request.userMessage)) request.userMessage.trim() + "\n" + request.contextJson else null
         if (cacheKey != null) {
             synchronized(cache) {
@@ -88,7 +93,10 @@ class ChatProviderRouter(
         val endpoints = settings.settings.first().chatEndpoints
             .filter { it.enabled && it.hasKey }
             .sortedByDescending { it.primary }
-        if (endpoints.isEmpty()) return offlineReply(request, null)
+        if (endpoints.isEmpty()) {
+            return if (channel == AiChannel.CLOUD_FIRST) localReply(request, "未配置可用云端端点", onDelta)
+            else offlineReply(request, null)
+        }
         val primaryId = endpoints.firstOrNull()?.id
         var usedBackup = false
         try {
@@ -120,14 +128,42 @@ class ChatProviderRouter(
                 usedBackup = usedBackup,
             )
         } catch (error: Throwable) {
-            return offlineReply(request, ErrorClassifier.userMessage(error), usedBackup)
+            val message = ErrorClassifier.userMessage(error)
+            return if (channel == AiChannel.CLOUD_FIRST) localReply(request, message, onDelta, usedBackup)
+            else offlineReply(request, message, usedBackup)
         }
     }
 
-    private suspend fun offlineReply(request: ChatRequest, error: String?, usedBackup: Boolean = false): ProviderReply {
+    private suspend fun localReply(
+        request: ChatRequest,
+        cloudError: String?,
+        onDelta: suspend (String) -> Unit,
+        usedBackup: Boolean = false,
+    ): ProviderReply {
+        return try {
+            _monitor.value = ChannelMonitor(AssistantChannelPhase.FALLBACK_ACTIVE, "正在使用本地模型")
+            val text = local.respond(request)
+            onDelta(text)
+            _monitor.value = ChannelMonitor(AssistantChannelPhase.MAIN_HEALTHY, "本地模型")
+            ProviderReply(text, ChatSource.LOCAL, usedBackup = usedBackup || cloudError != null)
+        } catch (error: Throwable) {
+            if (error is kotlinx.coroutines.CancellationException || error.message == "本地生成已取消") throw error
+            val reason = error.message ?: error.javaClass.simpleName
+            val combined = listOfNotNull(cloudError, "本地模型不可用：$reason").joinToString("；")
+            offlineReply(request, combined, usedBackup, reason)
+        }
+    }
+
+    private suspend fun offlineReply(
+        request: ChatRequest,
+        error: String?,
+        usedBackup: Boolean = false,
+        localError: String? = null,
+    ): ProviderReply {
         _monitor.value = ChannelMonitor(AssistantChannelPhase.OFFLINE, error)
-        val local = offline.respond(request)
-        val marked = if (local.startsWith("离线回答")) local else "离线回答\n$local"
+        val fallback = offline.respond(request)
+        val reason = localError?.let { "本地模型不可用：$it\n" }.orEmpty()
+        val marked = "离线回答\n$reason$fallback"
         return ProviderReply(marked, ChatSource.OFFLINE, error, usedBackup = usedBackup)
     }
 

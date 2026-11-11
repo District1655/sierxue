@@ -35,6 +35,7 @@ data class AssistantContext(
     fun toJson(): String = JSONObject().apply {
         put("page", page)
         putOptional("book", bookTitle)
+        putOptional("unitId", unitId)
         putOptional("unit", unitTitle)
         putOptional("section", sectionTitle)
         if (sectionContent.isNotBlank()) put("sectionContent", sectionContent.take(1_200))

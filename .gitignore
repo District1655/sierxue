@@ -10,6 +10,8 @@ local.properties
 *.apk
 *.aab
 *.gguf
+.cxx/
+**/.cxx/
 local-llm-probe/app/native-libs/
 
 # 签名、密钥与敏感配置

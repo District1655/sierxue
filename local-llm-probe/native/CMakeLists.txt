@@ -39,13 +39,14 @@ add_library(${PROBE_LIBRARY} SHARED llama_probe.cpp)
 target_include_directories(${PROBE_LIBRARY} PRIVATE
     ${LLAMA_CPP_ROOT}/include
     ${LLAMA_CPP_ROOT}/ggml/include
+    ${LLAMA_CPP_ROOT}/common
 )
 target_compile_features(${PROBE_LIBRARY} PRIVATE cxx_std_17)
 target_compile_options(${PROBE_LIBRARY} PRIVATE -O3 -fexceptions -frtti)
 if(PROBE_BACKEND STREQUAL "VULKAN")
     target_compile_definitions(${PROBE_LIBRARY} PRIVATE PROBE_VULKAN=1)
 endif()
-target_link_libraries(${PROBE_LIBRARY} PRIVATE llama ggml android log)
+target_link_libraries(${PROBE_LIBRARY} PRIVATE llama llama-common ggml android log)
 if(TARGET ggml-vulkan)
     target_link_libraries(${PROBE_LIBRARY} PRIVATE ggml-vulkan)
 endif()

@@ -4,8 +4,9 @@ import android.content.Context
 import com.sierxue.english.assistant.AssistantContextHolder
 import com.sierxue.english.assistant.AssistantRepository
 import com.sierxue.english.data.local.AppDatabase
+import com.sierxue.english.data.local.LlamaCppEngine
 import com.sierxue.english.data.local.LocalModelAssetStore
-import com.sierxue.english.data.local.ModelAssetStore
+import com.sierxue.english.data.local.LocalModelProvider
 import com.sierxue.english.data.local.SeedImporter
 import com.sierxue.english.data.remote.ChatProviderRouter
 import com.sierxue.english.data.remote.EndpointHealthStore
@@ -44,12 +45,15 @@ class AppContainer(context: Context) {
     val speech = SpeechManager(settings, systemTts, onlineTts)
     val assistantContext = AssistantContextHolder()
     val updateController = UpdateController(appContext)
-    val modelAssetStore: ModelAssetStore = LocalModelAssetStore(appContext)
+    val modelAssetStore = LocalModelAssetStore(appContext)
+    val localEngine = LlamaCppEngine(appContext, modelAssetStore)
+    val localModelProvider = LocalModelProvider(settings, study, localEngine)
     val ttsCacheDir: File = File(appContext.filesDir, "tts")
 
     val chatRouter = ChatProviderRouter(
         settings,
         RemoteChatProvider(settings, chatClient),
+        localModelProvider,
         OfflineFallbackProvider(),
         requestRunner,
     )

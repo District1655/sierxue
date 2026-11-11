@@ -177,7 +177,13 @@ private fun AssistantPanel(vm: AssistantViewModel, contextLabel: String, speechR
             state.streamingText?.let { partial ->
                 item { Card(Modifier.fillMaxWidth()) { Text(partial, modifier = Modifier.padding(12.dp)) } }
             }
-            if (state.loading) item { Row { CircularProgressIndicator(Modifier.size(20.dp)); Text("  小思正在思考…") } }
+            if (state.loading) item {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator(Modifier.size(20.dp))
+                    Text("  小思正在思考…", modifier = Modifier.weight(1f))
+                    TextButton(onClick = { vm.cancelGeneration() }) { Text("取消") }
+                }
+            }
         }
         state.status?.let {
             Text(it, color = if (state.canRetry) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall)

@@ -1,4 +1,11 @@
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+
 plugins { id("com.android.application") }
+
+val buildTime = OffsetDateTime.now(ZoneOffset.ofHours(8))
+    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss '+08:00'"))
 
 android {
     namespace = "com.sierxue.localprobe"
@@ -7,8 +14,9 @@ android {
         applicationId = "com.sierxue.localprobe"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "1.3.0"
+        buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
         ndk { abiFilters += "arm64-v8a" }
     }
     buildFeatures { buildConfig = true }

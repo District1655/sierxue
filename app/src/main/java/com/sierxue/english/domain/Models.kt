@@ -101,7 +101,12 @@ data class AppSettings(
     val tts: TtsConfig = TtsConfig(),
     val chatEndpoints: List<ChatConfig> = listOf(ChatConfig()),
     val ttsEndpoints: List<TtsConfig> = listOf(TtsConfig()),
+    val aiChannel: AiChannel = AiChannel.CLOUD_FIRST,
+    val localModelId: String = "qwen3_q8_0",
+    val localThinkingEnabled: Boolean = false,
 )
+
+enum class AiChannel { CLOUD_FIRST, CLOUD_ONLY, LOCAL_ONLY }
 
 data class ChatMessage(val role: String, val content: String)
 
@@ -114,8 +119,3 @@ data class ChatRequest(
 )
 
 interface ChatProvider { suspend fun respond(request: ChatRequest): String }
-
-/** 仅保留未来本地模型扩展点，首版不进入 Provider 路由。 */
-class LocalModelProvider : ChatProvider {
-    override suspend fun respond(request: ChatRequest): String = "本地模型未启用"
-}

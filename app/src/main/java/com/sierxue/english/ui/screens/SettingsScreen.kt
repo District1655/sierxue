@@ -137,6 +137,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                 OutlinedButton(onClick = { vm.clearConversations() }) { Text("清除对话记录") }
             }
 
+            LocalModelSettings(values, vm)
             ChatEndpointSettings(values, vm)
             TtsEndpointSettings(values, vm)
             ChannelHealthSettings(values, vm)
@@ -154,7 +155,7 @@ fun SettingsScreen(onBack: () -> Unit) {
             SettingsGroup("数据与关于") {
                 OutlinedButton(onClick = { clearData = true }) { Text("清除全部学习数据") }
                 Text("思而学 SiErXue · ${BuildConfig.VERSION_NAME}", fontWeight = FontWeight.Bold)
-                Text("包名 com.sierxue.english。教材驱动、离线优先。当前本地对话模型与 sherpa-onnx 仅保留扩展接口，设置中不提供未实现开关。")
+                Text("包名 com.sierxue.english。教材驱动、离线优先。支持 Qwen3-0.6B 本地 CPU 推理，仅 arm64-v8a；模型需单独下载或导入。 sherpa-onnx 仍仅保留扩展接口。")
             }
             message?.let { Text(it, color = MaterialTheme.colorScheme.primary) }
         }
@@ -162,7 +163,7 @@ fun SettingsScreen(onBack: () -> Unit) {
 }
 
 @Composable
-private fun SettingsGroup(title: String, content: @Composable () -> Unit) {
+internal fun SettingsGroup(title: String, content: @Composable () -> Unit) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)

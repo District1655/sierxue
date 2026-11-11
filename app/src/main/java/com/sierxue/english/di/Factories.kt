@@ -24,9 +24,10 @@ class AppViewModelFactory(private val container: AppContainer) : ViewModelProvid
             SettingsViewModel::class.java -> SettingsViewModel(
                 container.settings, container.study, container.assistant,
                 container.chatClient, container.ttsClient, container.ttsCacheDir, container.speech, container.healthStore,
+                container.modelAssetStore, container.localEngine,
             )
             AssistantViewModel::class.java -> AssistantViewModel(
-                container.assistant, container.assistantContext, container.settings, container.speech,
+                container.assistant, container.assistantContext, container.settings, container.speech, container.localEngine,
             )
             else -> throw IllegalArgumentException("未知 ViewModel：${modelClass.name}")
         }
